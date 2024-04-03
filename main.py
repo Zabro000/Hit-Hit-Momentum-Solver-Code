@@ -35,19 +35,42 @@ def draw_txt(surf, text, size, color, x, y):
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
+
+def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other_mass):
+    #starting math
+    collider_momentum_inital = collider_velocity * collider_mass
+    other_momentum_inital = other_velocity * other_mass
+    momentum_inital = other_momentum_inital + collider_momentum_inital
+    
+    #what the collider final velocity should be (this is important for the physics but can be different or random)
+    collider_velocity_final = -1 * 1/2 * collider_velocity
+
+    #equation for the velocity final of the other object
+    other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+
+    #momentum final
+    momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
+
+    if momentum_final == momentum_inital:
+        print("Momentum is conserved!")
+
+    return collider_velocity_final, other_velocity_final, momentum_inital
+
  
 #Blocks that collide
 class Block(pygame.sprite.Sprite):
    
     #Block Initialize
-    def __init__(self,side, blk_size, mass, v):
+    def __init__(self, side, blk_size, mass, v):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((blk_size,blk_size))
         self.rect = self.image.get_rect()
-        self.rect.bottom = HEIGHT - 90
+        self.rect.center = [WIDTH/2, HEIGHT/2]
         self.vel=v
         self.speedx = v
         self.mass=mass
+        self.size = blk_size
+       
         if side=="left":
             self.multiply=1
             self.image.fill(RED)
@@ -55,7 +78,11 @@ class Block(pygame.sprite.Sprite):
         elif side=="right":
             self.multiply=-1
             self.image.fill(BLUE)
-            self.rect.x = 500
+            self.rect.x = WIDTH - self.size - 50
+        elif side == "middle":
+            self.multiply = 1
+            self.image.fill(GREEN)
+            self.rect.x = (WIDTH - self.size)/2
         else:
             print("DIRECTION ERROR")
         
@@ -101,9 +128,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",50,5,0)
-RIGHT = Block("right",100,10,1)
-Other = Block("right", 200,10,12)
+LEFT = Block("left",50,5,1)
+RIGHT = Block("right",100,10,0)
+MIDDLE = Block("middle", 200,10,-1)
 
 #L_Wall= Wall("left",HEIGHT)
 #B_Wall= Wall("bottom",WIDTH)
@@ -116,7 +143,7 @@ all_sprites.add(RIGHT)
 all_sprites.add(B_Wall)
 all_sprites.add(R_Wall)
 all_sprites.add(RR_Wall) """
-all_sprites.add(Other)
+all_sprites.add(MIDDLE)
 
 #extra variables
 hit_count = 0
@@ -152,23 +179,28 @@ while running:
             print("RIGHT multply: ", RIGHT.multiply)
 
     
-    #Collision between 2 blocks
-    b_hit = pygame.sprite.collide_rect(LEFT, RIGHT)
-    if b_hit:
+    #First colision of the left and middle block
+   
+    first_hit = pygame.sprite.collide_rect(LEFT, MIDDLE)
+
+    if first_hit:
+        LEFT.vel = LEFT.vel * -1
+        LEFT.vel, MIDDLE.vel, momentum = momentum_math_simple(LEFT.vel, LEFT.mass, MIDDLE.vel, MIDDLE.mass)
+        
         hit_count+=1
-        LEFT.speedx=0
+        RIGHT.rect.left+=(RIGHT.vel+1)
+         
         LEFT.rect.right-=(LEFT.vel+1)
-        if LEFT.multiply!=RIGHT.multiply:
+        """         if LEFT.multiply!=RIGHT.multiply:
             RIGHT.multiply*=-1
         LEFT.multiply*=-1
-        LEFT.speedx=LEFT.vel
+        LEFT.speedx=LEFT.vel """
         
-        RIGHT.speedx=0
-        RIGHT.rect.left+=(RIGHT.vel+1)
-        RIGHT.speedx=RIGHT.vel
+       
+        
         
     #Collision between block and Wall   
-    """ w_hit_L = pygame.sprite.collide_rect(LEFT, L_Wall)
+    """  w_hit_L = pygame.sprite.collide_rect(LEFT, L_Wall)
     if w_hit_L:
         wall_hits+=1
         LEFT.rect.right+=2
@@ -180,8 +212,8 @@ while running:
     if w_hit_R:
         wall_hits+=1
         RIGHT.rect.right+=2
-        RIGHT.multiply*=-1 """
-    
+        RIGHT.multiply*=-1 
+     """
 
     #update
     all_sprites.update()

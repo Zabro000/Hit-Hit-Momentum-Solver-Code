@@ -43,16 +43,20 @@ def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other
     momentum_inital = other_momentum_inital + collider_momentum_inital
     
     #what the collider final velocity should be (this is important for the physics but can be different or random)
-    collider_velocity_final = -1 * 1/2 * collider_velocity
+    collider_velocity_final = 0
+    print("collider_velocity_final, ", collider_velocity_final)
 
     #equation for the velocity final of the other object
     other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+
+    print("other_velocity_final", other_velocity_final)
+    print("collider_velocity_final, ", collider_velocity_final)
 
     #momentum final
     momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
 
     if momentum_final == momentum_inital:
-        print("Momentum is conserved!")
+        print("Momentum is conserved!, ", momentum_final, momentum_inital)
 
     return collider_velocity_final, other_velocity_final, momentum_inital
 
@@ -90,19 +94,9 @@ class Block(pygame.sprite.Sprite):
     def update(self):
         
         #Auto run
-        if  self.vel!=0 and self.speedx == self.vel:
-            self.rect.x += self.speedx * self.multiply
-        
-        #Keyboard run
-        else:
-            #Temperary movement keys (A/D)
-            self.speedx = 0
-            keystate = pygame.key.get_pressed()
-            if keystate[pygame.K_a]:
-                self.speedx = -10
-            if keystate[pygame.K_d]:
-                self.speedx = 10
+        #if  self.vel!=0 and self.speedx == self.vel:
         self.rect.x += self.speedx * self.multiply
+        
 
 
      
@@ -128,21 +122,14 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",50,5,1)
+LEFT = Block("left",200,20,5)
 RIGHT = Block("right",100,10,0)
 MIDDLE = Block("middle", 200,10,-1)
 
-#L_Wall= Wall("left",HEIGHT)
-#B_Wall= Wall("bottom",WIDTH)
-#R_Wall=Wall("right",HEIGHT)
-#RR_Wall = Wall("right",HEIGHT)
+
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
-""" all_sprites.add(L_Wall)
-all_sprites.add(B_Wall)
-all_sprites.add(R_Wall)
-all_sprites.add(RR_Wall) """
 all_sprites.add(MIDDLE)
 
 #extra variables
@@ -183,37 +170,24 @@ while running:
    
     first_hit = pygame.sprite.collide_rect(LEFT, MIDDLE)
 
+
     if first_hit:
-        LEFT.vel = LEFT.vel * -1
-        LEFT.vel, MIDDLE.vel, momentum = momentum_math_simple(LEFT.vel, LEFT.mass, MIDDLE.vel, MIDDLE.mass)
+        leftspeed, middlespeed, momentum = momentum_math_simple(LEFT.vel, LEFT.mass, MIDDLE.vel, MIDDLE.mass)
+
+        LEFT.speedx = leftspeed
+        MIDDLE.speedx = middlespeed
+        LEFT.rect.centerx += -10
+        MIDDLE.rect.centerx += 10
+        MIDDLE.image.fill(RED)
+
+
+        print(LEFT.speedx)
+
         
         hit_count+=1
-        RIGHT.rect.left+=(RIGHT.vel+1)
+        #RIGHT.rect.left+=(RIGHT.vel+1)
          
-        LEFT.rect.right-=(LEFT.vel+1)
-        """         if LEFT.multiply!=RIGHT.multiply:
-            RIGHT.multiply*=-1
-        LEFT.multiply*=-1
-        LEFT.speedx=LEFT.vel """
-        
-       
-        
-        
-    #Collision between block and Wall   
-    """  w_hit_L = pygame.sprite.collide_rect(LEFT, L_Wall)
-    if w_hit_L:
-        wall_hits+=1
-        LEFT.rect.right+=2
-        LEFT.multiply*=-1
-
-
-        
-    w_hit_R = pygame.sprite.collide_rect(RIGHT, R_Wall)
-    if w_hit_R:
-        wall_hits+=1
-        RIGHT.rect.right+=2
-        RIGHT.multiply*=-1 
-     """
+        #LEFT.rect.right-=(LEFT.vel+1)
 
     #update
     all_sprites.update()
@@ -221,7 +195,7 @@ while running:
     all_sprites.draw(screen)
     
     
-    draw_txt(screen, str(hit_count), 18, BLACK, (WIDTH/2), 10)
+    draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
     draw_txt(screen, str(wall_hits), 18, BLACK, (WIDTH/2), 26)
     draw_txt(screen, str(LEFT.vel), 18, RED, (WIDTH/4), 26)
     draw_txt(screen, str(RIGHT.vel), 18, BLUE, 3*(WIDTH/4), 26)

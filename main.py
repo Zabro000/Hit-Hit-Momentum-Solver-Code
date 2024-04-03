@@ -6,9 +6,9 @@ import pygame
 import time
 
 #Screen size and frames per second
-WIDTH = 1200
+WIDTH = 1300
 HEIGHT = 400
-FPS = 60
+FPS = 30
 
 #variables for colours used
 WHITE = (255, 255, 255)
@@ -26,7 +26,7 @@ pygame.display.set_caption("2Block Momentum")
 clock = pygame.time.Clock()
     
 #font for text used
-font_name = pygame.font.match_font('arial')
+font_name = pygame.font.match_font('calibri')
 
 #Draw Text - Allows you to easily draw vars on screen at some x.,y
 def draw_txt(surf, text, size, color, x, y):
@@ -38,12 +38,13 @@ def draw_txt(surf, text, size, color, x, y):
  
 #Blocks that collide
 class Block(pygame.sprite.Sprite):
+   
     #Block Initialize
-    def __init__(self,side,blk_size, mass, v):
+    def __init__(self,side, blk_size, mass, v):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((blk_size,blk_size))
         self.rect = self.image.get_rect()
-        self.rect.bottom = 3*(HEIGHT / 4)
+        self.rect.bottom = HEIGHT - 90
         self.vel=v
         self.speedx = v
         self.mass=mass
@@ -77,35 +78,6 @@ class Block(pygame.sprite.Sprite):
         self.rect.x += self.speedx * self.multiply
 
 
-#Wall
-class Wall(pygame.sprite.Sprite):
-    #Wall Initialize
-    def __init__(self,loc,blk_size):
-        pygame.sprite.Sprite.__init__(self)
-        self.thick=25
-        if loc=="left":
-            self.image = pygame.Surface((self.thick,blk_size))
-            self.image.fill(BLACK)
-            self.rect = self.image.get_rect()
-            self.rect.centerx = (self.thick/2)-5
-            self.rect.centery = HEIGHT/2
-            
-        elif loc=="right":
-            self.image = pygame.Surface((self.thick,blk_size))
-            self.image.fill(BLACK)
-            self.rect = self.image.get_rect()
-            self.rect.centerx = (WIDTH-(self.thick/2))+5
-            self.rect.centery = HEIGHT/2
-        
-        elif loc=="bottom":
-            self.image = pygame.Surface((blk_size,self.thick))
-            self.image.fill(BLACK)
-            self.rect = self.image.get_rect()
-            self.rect.centerx = WIDTH/2
-            self.rect.top = (3*(HEIGHT / 4))+1
-        
-        else:
-            print("WALL BUILD ERROR")
      
 #title screen, shows controls, gives option to start game
 def show_ttl_screen():
@@ -133,17 +105,17 @@ LEFT = Block("left",50,5,0)
 RIGHT = Block("right",100,10,1)
 Other = Block("right", 200,10,12)
 
-L_Wall= Wall("left",HEIGHT)
-B_Wall= Wall("bottom",WIDTH)
-R_Wall=Wall("right",HEIGHT)
-RR_Wall = Wall("right",HEIGHT)
+#L_Wall= Wall("left",HEIGHT)
+#B_Wall= Wall("bottom",WIDTH)
+#R_Wall=Wall("right",HEIGHT)
+#RR_Wall = Wall("right",HEIGHT)
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
-all_sprites.add(L_Wall)
+""" all_sprites.add(L_Wall)
 all_sprites.add(B_Wall)
 all_sprites.add(R_Wall)
-all_sprites.add(RR_Wall)
+all_sprites.add(RR_Wall) """
 all_sprites.add(Other)
 
 #extra variables
@@ -154,6 +126,7 @@ wall_hits = 0
 game_start = True
 running = True
 
+show_ttl_screen()
 
 while running:
         #title screen, will be the first thing to be displayed when game is run
@@ -195,7 +168,7 @@ while running:
         RIGHT.speedx=RIGHT.vel
         
     #Collision between block and Wall   
-    w_hit_L = pygame.sprite.collide_rect(LEFT, L_Wall)
+    """ w_hit_L = pygame.sprite.collide_rect(LEFT, L_Wall)
     if w_hit_L:
         wall_hits+=1
         LEFT.rect.right+=2
@@ -207,7 +180,7 @@ while running:
     if w_hit_R:
         wall_hits+=1
         RIGHT.rect.right+=2
-        RIGHT.multiply*=-1
+        RIGHT.multiply*=-1 """
     
 
     #update

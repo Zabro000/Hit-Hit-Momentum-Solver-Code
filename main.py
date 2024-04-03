@@ -8,7 +8,7 @@ import time
 #Screen size and frames per second
 WIDTH = 1300
 HEIGHT = 400
-FPS = 30
+FPS = 60
 
 #variables for colours used
 WHITE = (255, 255, 255)
@@ -188,17 +188,39 @@ while running:
         #RIGHT.rect.left+=(RIGHT.vel+1)
          
         #LEFT.rect.right-=(LEFT.vel+1)
+    
+    
+    second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
+
+    if second_hit:
+        leftspeed, middlespeed, momentum = momentum_math_simple(MIDDLE.vel, MIDDLE.mass, RIGHT.vel, RIGHT.mass)
+
+        MIDDLE.speedx = leftspeed
+        RIGHT.speedx = middlespeed
+        MIDDLE.rect.centerx += -10
+        RIGHT.rect.centerx += 10
+        RIGHT.image.fill(RED)
+
+
+        print(MIDDLE.speedx)
+
+        
+        hit_count+=1
+        
+
 
     #update
     all_sprites.update()
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    
-    draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
+    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, BLACK, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, BLACK, (WIDTH/1.5), 40)
+
+    """ draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
     draw_txt(screen, str(wall_hits), 18, BLACK, (WIDTH/2), 26)
     draw_txt(screen, str(LEFT.vel), 18, RED, (WIDTH/4), 26)
-    draw_txt(screen, str(RIGHT.vel), 18, BLUE, 3*(WIDTH/4), 26)
+    draw_txt(screen, str(RIGHT.vel), 18, BLUE, 3*(WIDTH/4), 26) """
 
     #flips display after drawing everything
     pygame.display.flip()

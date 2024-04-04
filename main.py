@@ -95,7 +95,8 @@ class Block(pygame.sprite.Sprite):
         
         #Auto run
         #if  self.vel!=0 and self.speedx == self.vel:
-        self.rect.x += self.speedx * self.multiply
+        self.rect.x += self.speedx
+        print("Self rect x plus speed: ", self.rect.x)
         
 
 
@@ -122,9 +123,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,20,5)
-RIGHT = Block("right",100,10,0)
-MIDDLE = Block("middle", 200,10,-1)
+LEFT = Block("left",200,20, 0.55)
+RIGHT = Block("right",100,1,0)
+MIDDLE = Block("middle", 200,30,0.2)
 
 
 
@@ -164,6 +165,8 @@ while running:
             print("RIGHT left edge: ", RIGHT.rect.left)
             print("RIGHT speedx: ", RIGHT.speedx)
             print("RIGHT multply: ", RIGHT.multiply)
+            print("MIDDLE EDGE: ", MIDDLE.rect.right)
+            print("Middle speedx: ", MIDDLE.speedx)
 
     
     #First colision of the left and middle block

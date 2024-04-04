@@ -60,6 +60,11 @@ def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other
 
     return collider_velocity_final, other_velocity_final, momentum_inital
 
+
+
+def kinetic_energy_math_simple(net_velocity, mass):
+    return (1/2) * mass * net_velocity**2
+
  
 #Blocks that collide
 class Block(pygame.sprite.Sprite):
@@ -76,6 +81,7 @@ class Block(pygame.sprite.Sprite):
         self.size = blk_size
         self.float_position_x = 0
         self.text_color = BLACK
+        self.kinetic_energy = 0 
        
         if side=="left":
             self.image.fill(RED)
@@ -101,6 +107,7 @@ class Block(pygame.sprite.Sprite):
         self.float_position_x += self.speedx
         self.rect.x = round(self.float_position_x)
         #print("Self rect x plus speed: ", self.rect.x)
+        self.kinetic_energy = kinetic_energy_math_simple(self.speedx, self.mass)
         
 
 
@@ -223,6 +230,8 @@ while running:
         else:
             sprite.text_color = BLACK
             sprite.image.fill(BLUE)
+    
+    total_kinetic_energy = LEFT.kinetic_energy + MIDDLE.kinetic_energy + RIGHT.kinetic_energy
 
     #update
     all_sprites.update()
@@ -230,8 +239,19 @@ while running:
     all_sprites.draw(screen)
     
     draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, LEFT.text_color, (100), 20)
+
+    draw_txt(screen, f"Block 1 kinetic energy {str(LEFT.kinetic_energy)}", 18, LEFT.text_color, (100), 40)
+
     draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, MIDDLE.text_color, (WIDTH/2), 20)
+
+    draw_txt(screen, f"Block 2 kinetic energy {str(MIDDLE.kinetic_energy)}", 18, MIDDLE.text_color, (WIDTH/2), 40)
+
     draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}", 18, RIGHT.text_color, (WIDTH-100), 20)
+
+    draw_txt(screen, f"Block 2 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
+
+    draw_txt(screen, f"The total kinetic energy of the system is {str(total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
+    
  
 
     """ draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)

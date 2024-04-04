@@ -61,9 +61,9 @@ def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other
     return collider_velocity_final, other_velocity_final, momentum_inital
 
 
-
+#simple kinetic energy math function for 1D objects
 def kinetic_energy_math_simple(net_velocity, mass):
-    return (1/2) * mass * net_velocity**2
+    return (1/2) * mass * (net_velocity**2)
 
  
 #Blocks that collide
@@ -135,8 +135,8 @@ def show_ttl_screen():
 #sprites used
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200,20, 2.2)
-RIGHT = Block("right",100,1,0)
-MIDDLE = Block("middle", 200,60,0.0)
+RIGHT = Block("right",100,30,-3)
+MIDDLE = Block("middle", 200,60,-0.25)
 
 
 

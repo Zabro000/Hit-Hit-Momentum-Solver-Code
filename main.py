@@ -74,29 +74,32 @@ class Block(pygame.sprite.Sprite):
         self.speedx = v
         self.mass=mass
         self.size = blk_size
+        self.float_position_x = 0
        
         if side=="left":
-            self.multiply=1
             self.image.fill(RED)
-            self.rect.x = 50
+            self.float_position_x = 50
         elif side=="right":
-            self.multiply=-1
             self.image.fill(BLUE)
-            self.rect.x = WIDTH - self.size - 50
+            self.float_position_x = WIDTH - self.size - 50
         elif side == "middle":
-            self.multiply = 1
             self.image.fill(GREEN)
-            self.rect.x = (WIDTH - self.size)/2
+            self.float_position_x = (WIDTH - self.size)/2
         else:
             print("DIRECTION ERROR")
+
+        self.rect.x = self.float_position_x
+ 
+        
         
     #Keys, speed, direction for Left Block
     def update(self):
         
         #Auto run
         #if  self.vel!=0 and self.speedx == self.vel:
-        self.rect.x += self.speedx
-        print("Self rect x plus speed: ", self.rect.x)
+        self.float_position_x += self.speedx
+        self.rect.x = round(self.float_position_x)
+        #print("Self rect x plus speed: ", self.rect.x)
         
 
 
@@ -123,9 +126,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,20, 0.55)
+LEFT = Block("left",200,20, 2.2)
 RIGHT = Block("right",100,1,0)
-MIDDLE = Block("middle", 200,30,0.2)
+MIDDLE = Block("middle", 200,30,0.0)
 
 
 
@@ -161,10 +164,8 @@ while running:
     if keystate[pygame.K_SPACE]:
             print("LEFT right edge: ", LEFT.rect.right)
             print("LEFT speedx: ", LEFT.speedx)
-            print("LEFT multply: ", LEFT.multiply)
             print("RIGHT left edge: ", RIGHT.rect.left)
             print("RIGHT speedx: ", RIGHT.speedx)
-            print("RIGHT multply: ", RIGHT.multiply)
             print("MIDDLE EDGE: ", MIDDLE.rect.right)
             print("Middle speedx: ", MIDDLE.speedx)
 

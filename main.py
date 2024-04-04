@@ -128,7 +128,7 @@ def show_ttl_screen():
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200,20, 2.2)
 RIGHT = Block("right",100,1,0)
-MIDDLE = Block("middle", 200,30,0.0)
+MIDDLE = Block("middle", 200,60,0.0)
 
 
 
@@ -218,8 +218,9 @@ while running:
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, BLACK, (WIDTH/2), 20)
-    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, BLACK, (WIDTH/1.5), 40)
+    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, BLACK, (100), 20)
+    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, BLACK, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}", 18, BLACK, (WIDTH-100), 20)
 
     """ draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
     draw_txt(screen, str(wall_hits), 18, BLACK, (WIDTH/2), 26)

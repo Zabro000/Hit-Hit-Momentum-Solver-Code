@@ -176,7 +176,7 @@ while running:
 
 
     if first_hit:
-        leftspeed, middlespeed, momentum = momentum_math_simple(LEFT.vel, LEFT.mass, MIDDLE.vel, MIDDLE.mass)
+        leftspeed, middlespeed, momentum = momentum_math_simple(LEFT.speedx, LEFT.mass, MIDDLE.speedx, MIDDLE.mass)
 
         LEFT.speedx = leftspeed
         MIDDLE.speedx = middlespeed
@@ -197,10 +197,10 @@ while running:
     second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
 
     if second_hit:
-        leftspeed, middlespeed, momentum = momentum_math_simple(MIDDLE.vel, MIDDLE.mass, RIGHT.vel, RIGHT.mass)
+        middlespeed, rightspeed, momentum = momentum_math_simple(MIDDLE.speedx, MIDDLE.mass, RIGHT.speedx, RIGHT.mass)
 
-        MIDDLE.speedx = leftspeed
-        RIGHT.speedx = middlespeed
+        MIDDLE.speedx = middlespeed
+        RIGHT.speedx = rightspeed
         MIDDLE.rect.centerx += -10
         RIGHT.rect.centerx += 10
         RIGHT.image.fill(RED)

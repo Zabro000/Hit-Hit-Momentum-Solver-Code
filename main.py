@@ -75,6 +75,7 @@ class Block(pygame.sprite.Sprite):
         self.mass=mass
         self.size = blk_size
         self.float_position_x = 0
+        self.text_color = BLACK
        
         if side=="left":
             self.image.fill(RED)
@@ -144,6 +145,9 @@ wall_hits = 0
 game_start = True
 running = True
 
+#Screen outputs
+
+
 show_ttl_screen()
 
 while running:
@@ -180,10 +184,8 @@ while running:
 
         LEFT.speedx = leftspeed
         MIDDLE.speedx = middlespeed
-        LEFT.rect.centerx += -10
-        MIDDLE.rect.centerx += 10
-        MIDDLE.image.fill(RED)
-
+        LEFT.rect.centerx += -1
+        MIDDLE.rect.centerx += 1
 
         print(LEFT.speedx)
 
@@ -201,9 +203,9 @@ while running:
 
         MIDDLE.speedx = middlespeed
         RIGHT.speedx = rightspeed
-        MIDDLE.rect.centerx += -10
-        RIGHT.rect.centerx += 10
-        RIGHT.image.fill(RED)
+        MIDDLE.rect.centerx += -1
+        RIGHT.rect.centerx += 1
+        
 
 
         print(MIDDLE.speedx)
@@ -212,15 +214,25 @@ while running:
         hit_count+=1
         
 
+    
+    #Changing the color of the text based if a sprite is moving or not
+    for sprite in all_sprites:
+        if sprite.speedx != 0:
+            sprite.text_color = RED 
+            sprite.image.fill(RED)
+        else:
+            sprite.text_color = BLACK
+            sprite.image.fill(BLUE)
 
     #update
     all_sprites.update()
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, BLACK, (100), 20)
-    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, BLACK, (WIDTH/2), 20)
-    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}", 18, BLACK, (WIDTH-100), 20)
+    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, LEFT.text_color, (100), 20)
+    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, MIDDLE.text_color, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}", 18, RIGHT.text_color, (WIDTH-100), 20)
+ 
 
     """ draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
     draw_txt(screen, str(wall_hits), 18, BLACK, (WIDTH/2), 26)

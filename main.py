@@ -4,6 +4,7 @@
 
 import pygame
 import time
+import random
 
 #Screen size and frames per second
 WIDTH = 1300

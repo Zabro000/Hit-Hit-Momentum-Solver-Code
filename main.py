@@ -183,9 +183,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200, 30, 10,"left block")  
-RIGHT = Block("right",100,30, 0)
-MIDDLE = Block("middle", 200,60,-5, "middle block")
+LEFT = Block("left",200, 60, 5,"left block")  
+RIGHT = Block("right",100,0.1, -1)
+MIDDLE = Block("middle", 200,60, -5.022001, "middle block")
 
 
 
@@ -248,6 +248,10 @@ while running:
         projectile = first_hit_objs[-2]
 
         collider_space_sign = -1 * collider.speedx_sign
+        projectile_space_sign = -1 * projectile.speedx_sign
+
+        collider.float_position_x += 20 * collider_space_sign
+        projectile.float_position_x += 10 * projectile_space_sign
 
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
@@ -257,7 +261,6 @@ while running:
         hit_count+=1
         #RIGHT.rect.left+=(RIGHT.vel+1)
 
-        collider.float_position_x += 20 * collider_space_sign
          
         #LEFT.rect.right-=(LEFT.vel+1)
     
@@ -271,10 +274,18 @@ while running:
         collider = second_hit_objs[-1]
         projectile = second_hit_objs[-2]
 
+        collider_space_sign = -1 * collider.speedx_sign
+        projectile_space_sign = -1 * projectile.speedx_sign
+
+        collider.float_position_x += 20 * collider_space_sign
+        projectile.float_position_x += 10 * projectile_space_sign
+
         collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
         
         hit_count+=1
+
+     
         
 
     

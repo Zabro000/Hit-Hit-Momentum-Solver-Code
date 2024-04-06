@@ -234,17 +234,24 @@ while running:
         second_hit_objs = [MIDDLE, RIGHT]
         second_hit_objs = bubble_sort(second_hit_objs)
 
-        print(second_hit_objs[-1].speedx)
+        collider = second_hit_objs[-1]
+        projectile = second_hit_objs[-2]
+
+        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+
+    
+
+       
 
         
 
-        
+        """  
         print("Second hit!!")
 
         middlespeed, rightspeed, momentum = velocity_finder_simple(RIGHT.speedx, RIGHT.mass, MIDDLE.speedx, MIDDLE.mass)
 
         MIDDLE.speedx = rightspeed
-        RIGHT.speedx = middlespeed
+        RIGHT.speedx = middlespeed """
         """ MIDDLE.rect.centerx += -10
         RIGHT.rect.centerx += 10 """
         
@@ -267,6 +274,7 @@ while running:
             sprite.image.fill(BLUE)
     
     total_kinetic_energy = LEFT.kinetic_energy + MIDDLE.kinetic_energy + RIGHT.kinetic_energy
+    total_momentum = LEFT.momentum + MIDDLE.momentum + RIGHT.momentum
 
     #update
     all_sprites.update()
@@ -286,6 +294,10 @@ while running:
     draw_txt(screen, f"Block 2 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
 
     draw_txt(screen, f"The total kinetic energy of the system is {str(total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
+
+    draw_txt(screen, f"The total momentum of the system is {str(total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
+
+
     
  
 

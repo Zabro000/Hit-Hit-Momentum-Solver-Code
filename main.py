@@ -77,7 +77,7 @@ def bubble_sort(item_list):
 
         for object_ in range(0, item_list_length - index - 1):
             
-            if item_list[object_].momentum > item_list[object_ + 1].momentum:
+            if abs(item_list[object_].momentum) > abs(item_list[object_ + 1].momentum):
                 item_list[object_], item_list[object_ + 1] = item_list[object_ + 1], item_list[object_]
 
     return item_list
@@ -159,9 +159,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,20, 0)
+LEFT = Block("left",200,60, 5)
 RIGHT = Block("right",100,30,-2)
-MIDDLE = Block("middle", 200,60,5)
+MIDDLE = Block("middle", 200,60,-5)
 
 
 
@@ -212,16 +212,17 @@ while running:
 
 
     if first_hit:
-        leftspeed, middlespeed, momentum = velocity_finder_simple(LEFT.speedx, LEFT.mass, MIDDLE.speedx, MIDDLE.mass)
+        first_hit_objs = [LEFT, MIDDLE]
+        first_hit_objs = bubble_sort(first_hit_objs)
 
-        LEFT.speedx = leftspeed
-        MIDDLE.speedx = middlespeed
-        LEFT.rect.centerx += -1
-        MIDDLE.rect.centerx += 1
+        #print("velocity of fastest", first_hit_objs[-1].speedx)
 
-        print(LEFT.speedx)
 
-        
+        collider = first_hit_objs[-1]
+        projectile = first_hit_objs[-2]
+
+        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+
         hit_count+=1
         #RIGHT.rect.left+=(RIGHT.vel+1)
          
@@ -238,26 +239,6 @@ while running:
         projectile = second_hit_objs[-2]
 
         collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
-
-    
-
-       
-
-        
-
-        """  
-        print("Second hit!!")
-
-        middlespeed, rightspeed, momentum = velocity_finder_simple(RIGHT.speedx, RIGHT.mass, MIDDLE.speedx, MIDDLE.mass)
-
-        MIDDLE.speedx = rightspeed
-        RIGHT.speedx = middlespeed """
-        """ MIDDLE.rect.centerx += -10
-        RIGHT.rect.centerx += 10 """
-        
-
-
-        print(MIDDLE.speedx)
 
         
         hit_count+=1

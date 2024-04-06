@@ -98,6 +98,9 @@ class Block(pygame.sprite.Sprite):
     #Block Initialize
     def __init__(self, side, blk_size, mass, v, name = None ):
         pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((blk_size,blk_size))
+        self.rect = self.image.get_rect()
+        self.rect.center = [WIDTH/2, HEIGHT/2]
         self.vel=v
         self.speedx = v
         self.mass=mass
@@ -105,17 +108,6 @@ class Block(pygame.sprite.Sprite):
         self.float_position_x = 0
         self.text_color = BLACK
         self.kinetic_energy = 0 
-
-        if blk_size == "big":
-            self.image = pygame.Surface((200,200))
-        elif blk_size == "small":
-            self.image = pygame.Surface((100,100))
-        else:
-            print("Type either big or small")
-            raise TypeError
-        
-        self.rect = self.image.get_rect()
-        self.rect.center = [WIDTH/2, HEIGHT/2]
 
         if side=="left":
             self.image.fill(RED)
@@ -196,8 +188,8 @@ def show_ttl_screen():
 #sprites used
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 60, 5,"left block")  
-RIGHT = Block("right",100,2, -3)
-MIDDLE = Block("middle", 200,60, -5.022001, "middle block")
+RIGHT = Block("right",100,100, -100)
+MIDDLE = Block("middle", 200,10000, 4, "middle block")
 
 
 

@@ -184,7 +184,7 @@ def show_ttl_screen():
 #sprites used
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 60, 5,"left block")  
-RIGHT = Block("right",100,0.1, -1)
+RIGHT = Block("right",100,2, -3)
 MIDDLE = Block("middle", 200,60, -5.022001, "middle block")
 
 

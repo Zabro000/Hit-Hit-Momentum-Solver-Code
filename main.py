@@ -70,6 +70,7 @@ def kinetic_energy_math_simple(net_velocity, mass):
     return (1/2) * mass * (net_velocity**2)
 
 
+#uses amount of momentum to sort
 def bubble_sort(item_list):
     item_list_length = len(item_list)
 
@@ -167,9 +168,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,300, 1)
-RIGHT = Block("right",100,30,-2)
-MIDDLE = Block("middle", 200,60,-5)
+LEFT = Block("left",200,350, 1,"left block")
+RIGHT = Block("right",100,30,-10)
+MIDDLE = Block("middle", 200,60,-5, "middle block")
 
 
 
@@ -223,14 +224,16 @@ while running:
         first_hit_objs = [LEFT, MIDDLE]
         first_hit_objs = bubble_sort(first_hit_objs)
 
-        print("velocity of fastest", first_hit_objs[-1].speedx)
+        print("velocity of fastest", first_hit_objs[-1].name)
 
 
         
         collider = first_hit_objs[-1]
         projectile = first_hit_objs[-2]
 
-        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+        collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+
+        collider.float_position_x + 10
 
         hit_count+=1
         #RIGHT.rect.left+=(RIGHT.vel+1)

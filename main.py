@@ -123,6 +123,8 @@ class Block(pygame.sprite.Sprite):
         else:
             self.name = name
 
+        
+
 
         self.rect.x = self.float_position_x
 
@@ -130,9 +132,15 @@ class Block(pygame.sprite.Sprite):
     @property
     def momentum(self):
         return self.mass * self.speedx
- 
-        
-        
+    
+
+    """ def velocity_x_sign(self):
+        if self.speedx >= 0:
+            self.speedx_sign = 1
+        else:
+            self.speedx_sign = -1 """
+            
+  
     #Keys, speed, direction for Left Block
     def update(self):
         
@@ -142,6 +150,13 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = round(self.float_position_x)
         #print("Self rect x plus speed: ", self.rect.x)
         self.kinetic_energy = kinetic_energy_math_simple(self.speedx, self.mass)
+
+        if self.speedx >= 0:
+            self.speedx_sign = 1
+        else:
+            self.speedx_sign = -1
+
+        
         
 
 
@@ -168,8 +183,8 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,350, 1,"left block")
-RIGHT = Block("right",100,30,-10)
+LEFT = Block("left",200, 30, 10,"left block")  
+RIGHT = Block("right",100,30, 0)
 MIDDLE = Block("middle", 200,60,-5, "middle block")
 
 
@@ -225,18 +240,24 @@ while running:
         first_hit_objs = bubble_sort(first_hit_objs)
 
         print("velocity of fastest", first_hit_objs[-1].name)
+        print("should stop:", first_hit_objs[-1].name)
 
 
         
         collider = first_hit_objs[-1]
         projectile = first_hit_objs[-2]
 
+        collider_space_sign = -1 * collider.speedx_sign
+
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
-        collider.float_position_x + 10
+        #collider.float_position_x += 2 * collider.speedx_sign
+        #projectile.float_position_x += 2 * projectile.speedx_sign
 
         hit_count+=1
         #RIGHT.rect.left+=(RIGHT.vel+1)
+
+        collider.float_position_x += 20 * collider_space_sign
          
         #LEFT.rect.right-=(LEFT.vel+1)
     

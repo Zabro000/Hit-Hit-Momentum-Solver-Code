@@ -37,7 +37,7 @@ def draw_txt(surf, text, size, color, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
-def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other_mass):
+def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, other_mass):
     #starting math
     collider_momentum_inital = collider_velocity * collider_mass
     other_momentum_inital = other_velocity * other_mass
@@ -61,10 +61,29 @@ def momentum_math_simple(collider_velocity, collider_mass, other_velocity, other
 
     return collider_velocity_final, other_velocity_final, momentum_inital
 
+def momentum_math_simple(mass, velocity):
+    return mass * velocity
+
 
 #simple kinetic energy math function for 1D objects
 def kinetic_energy_math_simple(net_velocity, mass):
     return (1/2) * mass * (net_velocity**2)
+
+
+def bubble_sort(item_list):
+    item_list_length = len(item_list)
+
+    for index in range(item_list_length):
+
+        for object_ in range(0, item_list_length - index - 1):
+            
+            if item_list[object_].momentum > item_list[object_ + 1].momentum:
+                item_list[object_], item_list[object_ + 1] = item_list[object_ + 1], item_list[object_]
+
+    return item_list
+
+
+            
 
  
 #Blocks that collide
@@ -97,6 +116,11 @@ class Block(pygame.sprite.Sprite):
             print("DIRECTION ERROR")
 
         self.rect.x = self.float_position_x
+
+    
+    @property
+    def momentum(self):
+        return self.mass * self.speedx
  
         
         
@@ -137,7 +161,7 @@ def show_ttl_screen():
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200,20, 0)
 RIGHT = Block("right",100,30,-2)
-MIDDLE = Block("middle", 200,60,0)
+MIDDLE = Block("middle", 200,60,5)
 
 
 
@@ -188,7 +212,7 @@ while running:
 
 
     if first_hit:
-        leftspeed, middlespeed, momentum = momentum_math_simple(LEFT.speedx, LEFT.mass, MIDDLE.speedx, MIDDLE.mass)
+        leftspeed, middlespeed, momentum = velocity_finder_simple(LEFT.speedx, LEFT.mass, MIDDLE.speedx, MIDDLE.mass)
 
         LEFT.speedx = leftspeed
         MIDDLE.speedx = middlespeed
@@ -207,15 +231,22 @@ while running:
     second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
 
     if second_hit:
-        print("Second hit!!")
-        MIDDLE.rect.centerx += 100
-        RIGHT.rect.centerx += 10
-        middlespeed, rightspeed, momentum = momentum_math_simple(MIDDLE.speedx, MIDDLE.mass, RIGHT.speedx, RIGHT.mass)
+        second_hit_objs = [MIDDLE, RIGHT]
+        second_hit_objs = bubble_sort(second_hit_objs)
 
-        MIDDLE.speedx = middlespeed
-        RIGHT.speedx = rightspeed
-        MIDDLE.rect.centerx += -10
-        RIGHT.rect.centerx += 10
+        print(second_hit_objs[-1].speedx)
+
+        
+
+        
+        print("Second hit!!")
+
+        middlespeed, rightspeed, momentum = velocity_finder_simple(RIGHT.speedx, RIGHT.mass, MIDDLE.speedx, MIDDLE.mass)
+
+        MIDDLE.speedx = rightspeed
+        RIGHT.speedx = middlespeed
+        """ MIDDLE.rect.centerx += -10
+        RIGHT.rect.centerx += 10 """
         
 
 

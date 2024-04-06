@@ -79,6 +79,8 @@ def bubble_sort(item_list):
             
             if abs(item_list[object_].momentum) > abs(item_list[object_ + 1].momentum):
                 item_list[object_], item_list[object_ + 1] = item_list[object_ + 1], item_list[object_]
+    
+
 
     return item_list
 
@@ -90,7 +92,7 @@ def bubble_sort(item_list):
 class Block(pygame.sprite.Sprite):
    
     #Block Initialize
-    def __init__(self, side, blk_size, mass, v):
+    def __init__(self, side, blk_size, mass, v, name = None ):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((blk_size,blk_size))
         self.rect = self.image.get_rect()
@@ -114,6 +116,12 @@ class Block(pygame.sprite.Sprite):
             self.float_position_x = (WIDTH - self.size)/2
         else:
             print("DIRECTION ERROR")
+
+        if name is None:
+            self.name = "general block"
+        else:
+            self.name = name
+
 
         self.rect.x = self.float_position_x
 
@@ -159,7 +167,7 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200,60, 5)
+LEFT = Block("left",200,300, 1)
 RIGHT = Block("right",100,30,-2)
 MIDDLE = Block("middle", 200,60,-5)
 
@@ -215,9 +223,10 @@ while running:
         first_hit_objs = [LEFT, MIDDLE]
         first_hit_objs = bubble_sort(first_hit_objs)
 
-        #print("velocity of fastest", first_hit_objs[-1].speedx)
+        print("velocity of fastest", first_hit_objs[-1].speedx)
 
 
+        
         collider = first_hit_objs[-1]
         projectile = first_hit_objs[-2]
 

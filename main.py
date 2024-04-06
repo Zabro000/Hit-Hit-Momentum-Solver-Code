@@ -7,9 +7,12 @@ import time
 import random
 
 #Screen size and frames per second
-WIDTH = 1300
+WIDTH = 1500
 HEIGHT = 400
 FPS = 60
+
+big = 200
+small = 100
 
 #variables for colours used
 WHITE = (255, 255, 255)
@@ -95,9 +98,6 @@ class Block(pygame.sprite.Sprite):
     #Block Initialize
     def __init__(self, side, blk_size, mass, v, name = None ):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((blk_size,blk_size))
-        self.rect = self.image.get_rect()
-        self.rect.center = [WIDTH/2, HEIGHT/2]
         self.vel=v
         self.speedx = v
         self.mass=mass
@@ -105,7 +105,18 @@ class Block(pygame.sprite.Sprite):
         self.float_position_x = 0
         self.text_color = BLACK
         self.kinetic_energy = 0 
-       
+
+        if blk_size == "big":
+            self.image = pygame.Surface((200,200))
+        elif blk_size == "small":
+            self.image = pygame.Surface((100,100))
+        else:
+            print("Type either big or small")
+            raise TypeError
+        
+        self.rect = self.image.get_rect()
+        self.rect.center = [WIDTH/2, HEIGHT/2]
+
         if side=="left":
             self.image.fill(RED)
             self.float_position_x = 50
@@ -117,6 +128,7 @@ class Block(pygame.sprite.Sprite):
             self.float_position_x = (WIDTH - self.size)/2
         else:
             print("DIRECTION ERROR")
+            raise TypeError
 
         if name is None:
             self.name = "general block"
@@ -183,9 +195,9 @@ def show_ttl_screen():
            
 #sprites used
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200, 60, 5,"left block")  
-RIGHT = Block("right",100,2, -3)
-MIDDLE = Block("middle", 200,60, -5.022001, "middle block")
+LEFT = Block("left","big", 60, 5,"left block")  
+RIGHT = Block("right","small",2, -3)
+MIDDLE = Block("middle", "big",60, -5.022001, "middle block")
 
 
 

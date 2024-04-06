@@ -136,7 +136,7 @@ def show_ttl_screen():
 #sprites used
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200,20, 0)
-RIGHT = Block("right",100,30,-3)
+RIGHT = Block("right",100,30,-2)
 MIDDLE = Block("middle", 200,60,0)
 
 
@@ -207,12 +207,15 @@ while running:
     second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
 
     if second_hit:
+        print("Second hit!!")
+        MIDDLE.rect.centerx += 100
+        RIGHT.rect.centerx += 10
         middlespeed, rightspeed, momentum = momentum_math_simple(MIDDLE.speedx, MIDDLE.mass, RIGHT.speedx, RIGHT.mass)
 
         MIDDLE.speedx = middlespeed
         RIGHT.speedx = rightspeed
-        MIDDLE.rect.centerx += -1
-        RIGHT.rect.centerx += 1
+        MIDDLE.rect.centerx += -10
+        RIGHT.rect.centerx += 10
         
 
 

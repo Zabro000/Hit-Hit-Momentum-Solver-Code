@@ -205,40 +205,42 @@ all_buttons = pygame.sprite.Group()
 Random_B = Button("Random Motion", GREEN, WIDTH/2 - 100, HEIGHT/2)
 all_buttons.add(Random_B)
 
+show_ttl_screen()
 
 
 
 #Settings so the user can choose if they want a random collision or 
-def settings():
-    screen.fill(WHITE)
-    draw_txt(screen, "Settings for blocks:", 40, BLACK, WIDTH/2, 10)
+#/////////////////////////////////////////////////////////////////////////////////////////////////////
+screen.fill(WHITE)
+draw_txt(screen, "Settings for blocks:", 40, BLACK, WIDTH/2, 10)
 
-    pygame.display.flip()
+pygame.display.flip()
 
-    running = True
+running = True
 
-    while running:
-        clock.tick(FPS)
+while running:
+    clock.tick(FPS)
 
-        mouse_location = pygame.mouse.get_pos()
+    mouse_location = pygame.mouse.get_pos()
 
-        for event in pygame.event.get():
+    for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:
                 pygame.quit()
 
-            # Checks if there was a mouse click and it was over this button
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print(Random_B.rect.left)
-                print(mouse_location[0])
-                print(mouse_location[1])
-                print(Random_B.rect.top)
-                print('\n')
+        # Checks if there was a mouse click and it was over this button
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(Random_B.rect.left)
+            print(mouse_location[0])
+            print(mouse_location[1])
+            print(Random_B.rect.top)
+            print('\n')
                 
 
-                if Random_B.rect.left <= mouse_location[0] <= Random_B.rect.left + Random_B.button_width and Random_B.rect.top <= mouse_location[1] <= Random_B.rect.bottom:
-                    print("button was pressed")
-                    running = False
+            if Random_B.rect.left <= mouse_location[0] <= Random_B.rect.left + Random_B.button_width and Random_B.rect.top <= mouse_location[1] <= Random_B.rect.bottom:
+                print("button was pressed")
+                random_selection = True
+                running = False
 
 
 
@@ -248,22 +250,31 @@ def settings():
         all_buttons.draw(screen)
         draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position + Random_B.button_width/2, Random_B.y_position - 10)
         pygame.display.flip()
+#////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-show_ttl_screen()
-settings()
-      
 #sprites used
+
+
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 60, 5,"left block")  
 RIGHT = Block("right",100,100, -100)
 MIDDLE = Block("middle", 200,10000, 4, "middle block")
 
-
-
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
 all_sprites.add(MIDDLE)
+
+
+# assigns random mass and velocity to all objects
+if random_selection == True:
+    for objects in all_sprites:
+        new_velocity = random.uniform(-20, 20)
+        new_mass = random.uniform(0.1, 500)
+        objects.speedx  = new_velocity
+        objects.mass = new_mass
+
+
 
 #extra variables
 hit_count = 0
@@ -378,18 +389,19 @@ while running:
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)}", 18, LEFT.text_color, (100), 20)
+    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)} and mass {str(LEFT.mass)}", 18, LEFT.text_color, (100), 20)
 
     draw_txt(screen, f"Block 1 kinetic energy {str(LEFT.kinetic_energy)}", 18, LEFT.text_color, (100), 40)
 
-    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)}", 18, MIDDLE.text_color, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)} and mass {str(MIDDLE.mass)}", 18, MIDDLE.text_color, (WIDTH/2), 20)
 
     draw_txt(screen, f"Block 2 kinetic energy {str(MIDDLE.kinetic_energy)}", 18, MIDDLE.text_color, (WIDTH/2), 40)
 
-    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}", 18, RIGHT.text_color, (WIDTH-100), 20)
+    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}  and mass {str(MIDDLE.mass)}", 18, RIGHT.text_color, (WIDTH-100), 20)
 
-    draw_txt(screen, f"Block 2 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
+    draw_txt(screen, f"Block 3 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
 
+    
     draw_txt(screen, f"The total kinetic energy of the system is {str(total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
 
     draw_txt(screen, f"The total momentum of the system is {str(total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))

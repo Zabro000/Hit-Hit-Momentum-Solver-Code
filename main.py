@@ -227,6 +227,20 @@ def settings():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+            # Checks if there was a mouse click and it was over this button
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print(Random_B.rect.left)
+                print(mouse_location[0])
+                print(mouse_location[1])
+                print(Random_B.rect.top)
+                print('\n')
+                
+
+                if Random_B.rect.left <= mouse_location[0] <= Random_B.rect.left + Random_B.button_width and Random_B.rect.top <= mouse_location[1] <= Random_B.rect.bottom:
+                    print("button was pressed")
+                    running = False
+
+
 
             
 

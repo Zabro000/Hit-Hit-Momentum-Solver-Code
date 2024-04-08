@@ -265,9 +265,9 @@ while running:
 
 
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200, 20, 5,"left block")  
+LEFT = Block("left",200, 10, 5,"left block")  
 RIGHT = Block("right",100,100, -1)
-MIDDLE = Block("middle", 200,6000, -0.4, "middle block")
+MIDDLE = Block("middle", 200,6000, -0.1, "middle block")
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
@@ -347,6 +347,12 @@ while running:
         projectile.float_position_x += 10 * projectile_space_sign
 
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+
+        collider_space_sign = -1 * collider.speedx_sign
+        projectile_space_sign = -1 * projectile.speedx_sign
+
+        collider.float_position_x += 30 * collider_space_sign
+        projectile.float_position_x += 10 * projectile_space_sign
 
         #collider.float_position_x += 2 * collider.speedx_sign
         #projectile.float_position_x += 2 * projectile.speedx_sign

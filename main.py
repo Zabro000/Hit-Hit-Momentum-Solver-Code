@@ -267,7 +267,7 @@ while running:
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 10, 5,"left block")  
 RIGHT = Block("right",100,100, -1)
-MIDDLE = Block("middle", 200,6000, -0.1, "middle block")
+MIDDLE = Block("middle", 200,6000, 0.1, "middle block")
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
@@ -329,16 +329,20 @@ while running:
 
 
     if first_hit:
-        first_hit_objs = [LEFT, MIDDLE]
-        first_hit_objs = bubble_sort(first_hit_objs)
+         
+        # Statements to handle head on collisions vs collisions where one object pushes another
+        if LEFT.speedx_sign == MIDDLE.speedx_sign:
+            collider = LEFT
+            projectile = MIDDLE
+        else:
 
-        print("velocity of fastest", first_hit_objs[-1].name)
-        print("should stop:", first_hit_objs[-1].name)
+            first_hit_objs = [LEFT, MIDDLE]
+            first_hit_objs = bubble_sort(first_hit_objs)
+            collider = first_hit_objs[-1]
+            projectile = first_hit_objs[-2]
+            print("velocity of fastest", first_hit_objs[-1].name)
+            print("should stop:", first_hit_objs[-1].name)
 
-
-        
-        collider = first_hit_objs[-1]
-        projectile = first_hit_objs[-2]
 
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign

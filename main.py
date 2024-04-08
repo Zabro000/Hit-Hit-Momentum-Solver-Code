@@ -6,6 +6,8 @@ import pygame
 import time
 import random
 
+
+
 #Screen size and frames per second
 WIDTH = 1500
 HEIGHT = 400
@@ -26,7 +28,7 @@ YELLOW = (255, 255, 0)
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("2Block Momentum")
+pygame.display.set_caption("Penny Lab Simulation")
 clock = pygame.time.Clock()
     
 #font for text used
@@ -161,8 +163,19 @@ class Block(pygame.sprite.Sprite):
             self.speedx_sign = -1
 
         
-        
+class Button(pygame.sprite.Sprite):
 
+    def __init__(self, display_text, color, position_x, position_y) -> None:
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((200,100))
+        self.rect = self.image.get_rect()
+        self.rect.center = [WIDTH/2, HEIGHT/2]
+        self.display_text = display_text
+        self.color = color
+        self.x_position = position_x
+        self.y_position = position_y 
+
+        
 
      
 #title screen, shows controls, gives option to start game
@@ -184,7 +197,46 @@ def show_ttl_screen():
                 #starts game if a key is pressed
             if event.type == pygame.KEYUP:
                 waiting = False
-           
+
+
+
+
+
+            
+all_buttons = pygame.sprite.Group()
+Random_B = Button("Random Motion", BLUE, WIDTH/2 - 100, HEIGHT/2)
+all_buttons.add(Random_B)
+
+
+
+
+#Settings so the user can choose if they want a random collision or 
+def settings():
+    screen.fill(WHITE)
+    draw_txt(screen, "Settings for blocks:", 40, BLACK, WIDTH/2, 10)
+
+    pygame.display.flip()
+
+    running = True
+
+    while running:
+        clock.tick(FPS)
+
+        mouse_location = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        all_buttons.update()
+        all_buttons.draw(screen)
+        pygame.display.flip()
+
+
+show_ttl_screen()
+settings()
+      
 #sprites used
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 60, 5,"left block")  
@@ -208,7 +260,7 @@ running = True
 #Screen outputs
 
 
-show_ttl_screen()
+
 
 while running:
         #title screen, will be the first thing to be displayed when game is run

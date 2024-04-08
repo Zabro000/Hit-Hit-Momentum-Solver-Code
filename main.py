@@ -169,7 +169,7 @@ class Button(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((self.button_width,self.button_height))
         self.rect = self.image.get_rect()
-        self.rect.center = [WIDTH/2, HEIGHT/2]
+        self.rect.center = [position_x, position_y]
         self.display_text = display_text
         self.color = color
         self.x_position = position_x
@@ -205,12 +205,15 @@ def show_ttl_screen():
 
             
 all_buttons = pygame.sprite.Group()
-Random_B = Button("Random Motion", GREEN, WIDTH/2 - 100, HEIGHT/2)
+Random_B = Button("Random Values", GREEN, WIDTH/2 - 200, HEIGHT/2)
+Default_B = Button("Defualt Values", BLUE, WIDTH/2 + 200, HEIGHT/2)
 all_buttons.add(Random_B)
+all_buttons.add(Default_B)
 
 show_ttl_screen()
 
-
+# Important varrible
+random_selection = False
 
 #Settings so the user can choose if they want a random collision or 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,9 +247,16 @@ while running:
                 random_selection = True
                 running = False
 
+            if Default_B.rect.left <= mouse_location[0] <= Default_B.rect.left + Default_B.button_width and Default_B.rect.top <= mouse_location[1] <= Default_B.rect.bottom:
+                print("A button was pressed")
+                running = False
+
         all_buttons.update()
         all_buttons.draw(screen)
-        draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position + Random_B.button_width/2, Random_B.y_position - 10)
+
+        # shows the display text of the button
+        draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position, Random_B.y_position - 10)
+        draw_txt(screen, Default_B.display_text, 20, BLACK, Default_B.x_position, Default_B.y_position - 10)
         pygame.display.flip()
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -255,9 +265,9 @@ while running:
 
 
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200, 60, 5,"left block")  
-RIGHT = Block("right",100,100, -100)
-MIDDLE = Block("middle", 200,10000, 4, "middle block")
+LEFT = Block("left",200, 20, 5,"left block")  
+RIGHT = Block("right",100,100, -1)
+MIDDLE = Block("middle", 200,6000, -0.4, "middle block")
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
@@ -333,7 +343,7 @@ while running:
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
 
-        collider.float_position_x += 20 * collider_space_sign
+        collider.float_position_x += 30 * collider_space_sign
         projectile.float_position_x += 10 * projectile_space_sign
 
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
@@ -360,7 +370,7 @@ while running:
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
 
-        collider.float_position_x += 20 * collider_space_sign
+        collider.float_position_x += 30 * collider_space_sign
         projectile.float_position_x += 10 * projectile_space_sign
 
         collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)

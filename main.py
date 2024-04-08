@@ -16,6 +16,8 @@ FPS = 60
 big = 200
 small = 100
 
+sig_digs = 4 # what to round the new random mass and velocity to so the screen is not too messy
+
 #variables for colours used
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -149,6 +151,7 @@ class Block(pygame.sprite.Sprite):
         self.rect.x = round(self.float_position_x)
         #print("Self rect x plus speed: ", self.rect.x)
         self.kinetic_energy = kinetic_energy_math_simple(self.speedx, self.mass)
+    
 
         # sign of the speed direction is important for the code to determine which way the block will bounce away on a collision
         if self.speedx >= 0:
@@ -230,21 +233,16 @@ while running:
 
         # Checks if there was a mouse click and it was over this button
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(Random_B.rect.left)
+            """   print(Random_B.rect.left)
             print(mouse_location[0])
             print(mouse_location[1])
             print(Random_B.rect.top)
-            print('\n')
+            print('\n') """
                 
-
             if Random_B.rect.left <= mouse_location[0] <= Random_B.rect.left + Random_B.button_width and Random_B.rect.top <= mouse_location[1] <= Random_B.rect.bottom:
                 print("button was pressed")
                 random_selection = True
                 running = False
-
-
-
-            
 
         all_buttons.update()
         all_buttons.draw(screen)
@@ -267,10 +265,12 @@ all_sprites.add(MIDDLE)
 
 
 # assigns random mass and velocity to all objects
+sig_digs = 4 # what to round the new random mass and velocity to so the screen is not too messy
+
 if random_selection == True:
     for objects in all_sprites:
-        new_velocity = random.uniform(-20, 20)
-        new_mass = random.uniform(0.1, 500)
+        new_velocity = round(random.uniform(-3.5, 3.5), sig_digs)
+        new_mass = round(random.uniform(0.1, 500), sig_digs)
         objects.speedx  = new_velocity
         objects.mass = new_mass
 
@@ -278,7 +278,7 @@ if random_selection == True:
 
 #extra variables
 hit_count = 0
-wall_hits = 0
+
 
 #game loop
 game_start = True
@@ -383,6 +383,8 @@ while running:
     
     total_kinetic_energy = LEFT.kinetic_energy + MIDDLE.kinetic_energy + RIGHT.kinetic_energy
     total_momentum = LEFT.momentum + MIDDLE.momentum + RIGHT.momentum
+    round_total_momentum = round(total_momentum, sig_digs)
+    round_total_kinetic_energy = round(total_kinetic_energy, sig_digs)
 
     #update
     all_sprites.update()
@@ -402,9 +404,9 @@ while running:
     draw_txt(screen, f"Block 3 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
 
     
-    draw_txt(screen, f"The total kinetic energy of the system is {str(total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
+    draw_txt(screen, f"The total kinetic energy of the system is {str(round_total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
 
-    draw_txt(screen, f"The total momentum of the system is {str(total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
+    draw_txt(screen, f"The total momentum of the system is {str(round_total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
 
 
     

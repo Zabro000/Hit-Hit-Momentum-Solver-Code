@@ -139,13 +139,6 @@ class Block(pygame.sprite.Sprite):
     def momentum(self):
         return self.mass * self.speedx
     
-
-    """ def velocity_x_sign(self):
-        if self.speedx >= 0:
-            self.speedx_sign = 1
-        else:
-            self.speedx_sign = -1 """
-            
   
     #Keys, speed, direction for Left Block
     def update(self):
@@ -157,6 +150,7 @@ class Block(pygame.sprite.Sprite):
         #print("Self rect x plus speed: ", self.rect.x)
         self.kinetic_energy = kinetic_energy_math_simple(self.speedx, self.mass)
 
+        # sign of the speed direction is important for the code to determine which way the block will bounce away on a collision
         if self.speedx >= 0:
             self.speedx_sign = 1
         else:
@@ -165,15 +159,19 @@ class Block(pygame.sprite.Sprite):
         
 class Button(pygame.sprite.Sprite):
 
+
     def __init__(self, display_text, color, position_x, position_y) -> None:
+        self.button_width = 200
+        self.button_height = 100
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface((200,100))
+        self.image = pygame.Surface((self.button_width,self.button_height))
         self.rect = self.image.get_rect()
         self.rect.center = [WIDTH/2, HEIGHT/2]
         self.display_text = display_text
         self.color = color
         self.x_position = position_x
         self.y_position = position_y 
+        self.image.fill(color)
 
         
 
@@ -204,7 +202,7 @@ def show_ttl_screen():
 
             
 all_buttons = pygame.sprite.Group()
-Random_B = Button("Random Motion", BLUE, WIDTH/2 - 100, HEIGHT/2)
+Random_B = Button("Random Motion", GREEN, WIDTH/2 - 100, HEIGHT/2)
 all_buttons.add(Random_B)
 
 
@@ -229,8 +227,12 @@ def settings():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+
+            
+
         all_buttons.update()
         all_buttons.draw(screen)
+        draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position + Random_B.button_width/2, Random_B.y_position - 10)
         pygame.display.flip()
 
 

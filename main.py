@@ -207,6 +207,7 @@ def show_ttl_screen():
 all_buttons = pygame.sprite.Group()
 Random_B = Button("Random Values", GREEN, WIDTH/2 - 200, HEIGHT/2)
 Default_B = Button("Defualt Values", BLUE, WIDTH/2 + 200, HEIGHT/2)
+
 all_buttons.add(Random_B)
 all_buttons.add(Default_B)
 
@@ -265,9 +266,9 @@ while running:
 
 
 all_sprites = pygame.sprite.Group()
-LEFT = Block("left",200, 10, 5,"left block")  
+LEFT = Block("left",200, 600, 5,"left block")  
 RIGHT = Block("right",100,100, -1)
-MIDDLE = Block("middle", 200,6000, 0.1, "middle block")
+MIDDLE = Block("middle", 200,20, 0.1, "middle block")
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
@@ -358,24 +359,25 @@ while running:
         collider.float_position_x += 30 * collider_space_sign
         projectile.float_position_x += 10 * projectile_space_sign
 
-        #collider.float_position_x += 2 * collider.speedx_sign
-        #projectile.float_position_x += 2 * projectile.speedx_sign
-
         hit_count+=1
-        #RIGHT.rect.left+=(RIGHT.vel+1)
 
-         
-        #LEFT.rect.right-=(LEFT.vel+1)
-    
     
     second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
 
     if second_hit:
-        second_hit_objs = [MIDDLE, RIGHT]
-        second_hit_objs = bubble_sort(second_hit_objs)
 
-        collider = second_hit_objs[-1]
-        projectile = second_hit_objs[-2]
+        # Statements to handle head on collisions vs collisions where one object pushes another
+        if RIGHT.speedx_sign == MIDDLE.speedx_sign:
+            collider = RIGHT
+            projectile = MIDDLE
+        else:
+
+            first_hit_objs = [RIGHT, MIDDLE]
+            first_hit_objs = bubble_sort(first_hit_objs)
+            collider = first_hit_objs[-1]
+            projectile = first_hit_objs[-2]
+            print("velocity of fastest", first_hit_objs[-1].name)
+            print("should stop:", first_hit_objs[-1].name)
 
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
@@ -389,9 +391,6 @@ while running:
         hit_count+=1
 
      
-        
-
-    
     #Changing the color of the text based if a sprite is moving or not
     for sprite in all_sprites:
         if sprite.speedx != 0:

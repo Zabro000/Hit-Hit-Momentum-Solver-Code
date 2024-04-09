@@ -316,12 +316,17 @@ if random_selection == True:
         new_mass = round(random.uniform(0.1, 500), sig_digs)
         objects.speedx  = new_velocity
         objects.mass = new_mass
+        
+        
+        # quick fix because the right and the middle block would end up with the same random properties somehow    
+    RIGHT.mass = round(random.uniform(0.1, 520), sig_digs)
+    RIGHT.speedx = round(random.uniform(-3.5, 3.6), sig_digs)
 
 elif rear_end_selection == True:
      LEFT.mass = 40
      LEFT.speedx = 3
      MIDDLE.mass = 20
-     MIDDLE.speedx = 4
+     MIDDLE.speedx = 2
      RIGHT.mass = 10
      RIGHT.speedx = 0.1
 
@@ -374,13 +379,15 @@ while running:
 
 
     if first_hit:
-         
         # Statements to handle head on collisions vs collisions where one object pushes another
-        if LEFT.speedx_sign == MIDDLE.speedx_sign:
+        if LEFT.speedx_sign == MIDDLE.speedx_sign and LEFT.speedx_sign == 1:
             collider = LEFT
             projectile = MIDDLE
+        #Extra logic to handle all permutations of rear end collisions
+        elif LEFT.speedx_sign == MIDDLE.speedx_sign and LEFT == -1:
+            collider = MIDDLE
+            projectile = LEFT
         else:
-
             first_hit_objs = [LEFT, MIDDLE]
             first_hit_objs = bubble_sort(first_hit_objs)
             collider = first_hit_objs[-1]
@@ -411,11 +418,14 @@ while running:
     if second_hit:
 
         # Statements to handle head on collisions vs collisions where one object pushes another
-        if RIGHT.speedx_sign == MIDDLE.speedx_sign:
+        if RIGHT.speedx_sign == MIDDLE.speedx_sign and RIGHT.speedx == -1:
             collider = RIGHT
             projectile = MIDDLE
+        #Extra logic to handle all permutations of rear end collisions
+        elif RIGHT.speedx_sign == MIDDLE.speedx_sign and RIGHT.speedx == 1:
+            collider = MIDDLE
+            projectile = RIGHT
         else:
-
             first_hit_objs = [RIGHT, MIDDLE]
             first_hit_objs = bubble_sort(first_hit_objs)
             collider = first_hit_objs[-1]

@@ -46,6 +46,7 @@ def draw_txt(surf, text, size, color, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
+# Does the math for collisions
 def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, other_mass):
     #starting math
     collider_momentum_inital = collider_velocity * collider_mass
@@ -164,7 +165,8 @@ class Block(pygame.sprite.Sprite):
         else:
             self.speedx_sign = 2
 
-        
+
+# Buttons for options
 class Button(pygame.sprite.Sprite):
 
 
@@ -224,7 +226,7 @@ def show_ttl_screen():
 
 
 
-            
+#initalize all buttons       
 all_buttons = pygame.sprite.Group()
 Random_B = Button("Random Collision", BLUE, WIDTH/2 - 150, HEIGHT/2 - 30)
 Default_B = Button("Penny Collision", COPPER, WIDTH/2 + 150, HEIGHT/2 - 30)
@@ -241,7 +243,7 @@ random_selection = False
 rear_end_selection = False 
 defualt_selection = False
 
-#Settings so the user can choose if they want a random collision or 
+#SETTINGS GAME LOOP:
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
 screen.fill(WHITE)
 draw_txt(screen, "Collision Options:", 40, BLACK, WIDTH/2, 10)
@@ -291,6 +293,7 @@ while running:
         draw_txt(screen, str(Default_B.display_text), 20, WHITE, Default_B.x_position, Default_B.y_position - 10)
         draw_txt(screen, str(Rear_End_B.display_text), 20, WHITE, Rear_End_B.x_position, Rear_End_B.y_position -10)
         pygame.display.flip()
+#DONE SETTINGS GAME LOOP
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -304,6 +307,8 @@ all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
 all_sprites.add(MIDDLE)
 
+
+#Code for which button the user picked 
 
 if random_selection == True:
     for objects in all_sprites:
@@ -347,7 +352,8 @@ hit_count = 0
 game_start = True
 running = True
 
-
+#Main Game Loop
+#////////////////////////////////////////////////////////////////
 while running:
 
     #keep loop running at correct speed
@@ -358,6 +364,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
    
+    
+    #Code for collisions between the LEFT and MIDDLE block
     first_hit = pygame.sprite.collide_rect(LEFT, MIDDLE)
 
 
@@ -379,11 +387,7 @@ while running:
             print("should stop:", first_hit_objs[-1].name)
 
 
-        collider_space_sign = -1 * collider.speedx_sign
-        projectile_space_sign = -1 * projectile.speedx_sign
-
-        collider.float_position_x += 30 * collider_space_sign
-        projectile.float_position_x += 10 * projectile_space_sign
+        #Moves blocks away from each other so they dont get stuck
 
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
@@ -396,6 +400,7 @@ while running:
         hit_count+=1
 
     
+    #Code for collisions between the RIGHT and MIDDLE block 
     second_hit = pygame.sprite.collide_rect(RIGHT, MIDDLE)
 
     if second_hit:
@@ -416,13 +421,13 @@ while running:
             print("velocity of fastest", first_hit_objs[-1].name)
             print("should stop:", first_hit_objs[-1].name)
 
+        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
 
         collider.float_position_x += 30 * collider_space_sign
         projectile.float_position_x += 10 * projectile_space_sign
-
-        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
         
         hit_count+=1
@@ -447,6 +452,7 @@ while running:
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
+    # All text on screen 
     draw_txt(screen, f"Block 1 speed: {str(round(LEFT.speedx, sig_digs))}m/s and mass: {str(round(LEFT.mass,sig_digs))}kg", 18, LEFT.text_color, (200), 20)
 
     draw_txt(screen, f"Block 1 kinetic energy: {str(round(LEFT.kinetic_energy, sig_digs))}J", 18, LEFT.text_color, (200), 40)

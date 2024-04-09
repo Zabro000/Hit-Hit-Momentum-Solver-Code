@@ -460,17 +460,17 @@ while running:
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    draw_txt(screen, f"Block 1 speed {str(LEFT.speedx)} and mass {str(LEFT.mass)}", 18, LEFT.text_color, (100), 20)
+    draw_txt(screen, f"Block 1 speed {str(round(LEFT.speedx, sig_digs))} and mass {str(round(LEFT.mass,sig_digs))}", 18, LEFT.text_color, (200), 20)
 
-    draw_txt(screen, f"Block 1 kinetic energy {str(LEFT.kinetic_energy)}", 18, LEFT.text_color, (100), 40)
+    draw_txt(screen, f"Block 1 kinetic energy {str(round(LEFT.kinetic_energy, sig_digs))}", 18, LEFT.text_color, (200), 40)
 
-    draw_txt(screen, f"Block 2 speed {str(MIDDLE.speedx)} and mass {str(MIDDLE.mass)}", 18, MIDDLE.text_color, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 2 speed {str(round(MIDDLE.speedx, sig_digs))} and mass {str(round(MIDDLE.mass, sig_digs))}", 18, MIDDLE.text_color, (WIDTH/2), 20)
 
-    draw_txt(screen, f"Block 2 kinetic energy {str(MIDDLE.kinetic_energy)}", 18, MIDDLE.text_color, (WIDTH/2), 40)
+    draw_txt(screen, f"Block 2 kinetic energy {str(round(MIDDLE.kinetic_energy, sig_digs))}", 18, MIDDLE.text_color, (WIDTH/2), 40)
 
-    draw_txt(screen, f"Block 3 speed {str(RIGHT.speedx)}  and mass {str(MIDDLE.mass)}", 18, RIGHT.text_color, (WIDTH-100), 20)
+    draw_txt(screen, f"Block 3 speed {str(round(RIGHT.speedx, sig_digs))}  and mass {str(round(MIDDLE.mass, sig_digs))}", 18, RIGHT.text_color, (WIDTH-200), 20)
 
-    draw_txt(screen, f"Block 3 kinetic energy {str(RIGHT.kinetic_energy)}", 18, RIGHT.text_color, (WIDTH-100), 40)
+    draw_txt(screen, f"Block 3 kinetic energy {str(round(RIGHT.kinetic_energy, sig_digs))}", 18, RIGHT.text_color, (WIDTH-200), 40)
 
     
     draw_txt(screen, f"The total kinetic energy of the system is {str(round_total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))

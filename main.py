@@ -7,7 +7,6 @@ import time
 import random
 
 
-
 #Screen size and frames per second
 WIDTH = 1500
 HEIGHT = 400
@@ -18,6 +17,8 @@ small = 100
 
 sig_digs = 4 # what to round the new random mass and velocity to so the screen is not too messy
 
+penny_img = "penny.jpeg"
+
 #variables for colours used
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -25,7 +26,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-COPPER = (72, 45, 20)
+COPPER = (196, 98, 16)
 
 #initialise pygame and create a window
 pygame.init()
@@ -93,8 +94,6 @@ def bubble_sort(item_list):
 
     return item_list
 
-
-            
 
  
 #Blocks that collide
@@ -184,12 +183,27 @@ class Button(pygame.sprite.Sprite):
 
         
 
-     
 #title screen, shows controls, gives option to start game
 def show_ttl_screen():
     screen.fill(WHITE)
     #text for the title screen
-    draw_txt(screen, "Momentum Block Solver!", 40, BLACK, WIDTH / 2, 10)
+    draw_txt(screen, "Penny Lab Simulation!!!", 40, BLACK, WIDTH / 2, 10)
+    draw_txt(screen, "Press any key to continue.", 25, RED, WIDTH / 2, 50)
+    
+    
+    # Loads in the image of the simulation 
+    penny_image = pygame.image.load(penny_img)
+    penny_image_rect_x = round(penny_image.get_width())
+    penny_image_rect_y = round(penny_image.get_height())
+    new_penny_image_x = round(penny_image_rect_x/4)
+    new_penny_image_y = round(penny_image_rect_y/4)
+
+
+    penny_image = pygame.transform.scale(penny_image, (round(penny_image_rect_x/4), round(penny_image_rect_y/4)))
+
+    screen.blit(penny_image, (WIDTH/2 - new_penny_image_x/2 ,100))
+
+
     
     #flips display after drawing
     pygame.display.flip()
@@ -211,8 +225,8 @@ def show_ttl_screen():
 
             
 all_buttons = pygame.sprite.Group()
-Random_B = Button("Random Collision", GREEN, WIDTH/2 - 150, HEIGHT/2 - 30)
-Default_B = Button("Defualt Collision", BLUE, WIDTH/2 + 150, HEIGHT/2 - 30)
+Random_B = Button("Random Collision", BLUE, WIDTH/2 - 150, HEIGHT/2 - 30)
+Default_B = Button("Penny Collision", COPPER, WIDTH/2 + 150, HEIGHT/2 - 30)
 Rear_End_B = Button("Rear End Collision", RED, WIDTH/2, HEIGHT/2 + 100)
 
 all_buttons.add(Random_B)
@@ -229,7 +243,7 @@ defualt_selection = False
 #Settings so the user can choose if they want a random collision or 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
 screen.fill(WHITE)
-draw_txt(screen, "Settings for blocks:", 40, BLACK, WIDTH/2, 10)
+draw_txt(screen, "Collision Options:", 40, BLACK, WIDTH/2, 10)
 
 pygame.display.flip()
 
@@ -272,8 +286,8 @@ while running:
         all_buttons.draw(screen)
 
         # shows the display text of the button
-        draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position, Random_B.y_position - 10)
-        draw_txt(screen, str(Default_B.display_text), 20, BLACK, Default_B.x_position, Default_B.y_position - 10)
+        draw_txt(screen,str(Random_B.display_text), 20, WHITE, Random_B.x_position, Random_B.y_position - 10)
+        draw_txt(screen, str(Default_B.display_text), 20, WHITE, Default_B.x_position, Default_B.y_position - 10)
         draw_txt(screen, str(Rear_End_B.display_text), 20, WHITE, Rear_End_B.x_position, Rear_End_B.y_position -10)
         pygame.display.flip()
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,9 +321,9 @@ elif rear_end_selection == True:
      LEFT.mass = 40
      LEFT.speedx = 3
      MIDDLE.mass = 20
-     MIDDLE.speedx = 1
+     MIDDLE.speedx = 4
      RIGHT.mass = 10
-     RIGHT.speedx = 0
+     RIGHT.speedx = 0.1
 
 elif defualt_selection == True:
      penny_mass = 0.00235
@@ -322,20 +336,8 @@ elif defualt_selection == True:
     
      LEFT.speedx = 1.5
 else: 
-      
-      raise "E"
-
-     
-
-
-      """     penny_mass = 0.00235 
-      for objects in all_sprites:
-        objects.mass = penny_mass
-        objects.speedx = 0
-        objects.body_color = COPPER 
-        objects.blk_size = 75 """
-
-
+      print("Button or selection malfunctioned!")
+      raise NameError
 
 #extra variables
 hit_count = 0
@@ -345,17 +347,9 @@ hit_count = 0
 game_start = True
 running = True
 
-#Screen outputs
-
-
-
 
 while running:
-        #title screen, will be the first thing to be displayed when game is run
-#     if game_start:
-#         show_ttl_screen()
-#         game_start = False    
-        
+
     #keep loop running at correct speed
     clock.tick(FPS)
     #Process input (events)
@@ -364,8 +358,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             
-    keystate = pygame.key.get_pressed()
-    if keystate[pygame.K_SPACE]:
+        """  keystate = pygame.key.get_pressed() """
+        """  if keystate[pygame.K_SPACE]:
             print("LEFT right edge: ", LEFT.rect.right)
             print("LEFT speedx: ", LEFT.speedx)
             print("RIGHT left edge: ", RIGHT.rect.left)
@@ -373,7 +367,7 @@ while running:
             print("MIDDLE EDGE: ", MIDDLE.rect.right)
             print("Middle speedx: ", MIDDLE.speedx)
 
-    
+          """
     #First colision of the left and middle block
    
     first_hit = pygame.sprite.collide_rect(LEFT, MIDDLE)
@@ -477,7 +471,7 @@ while running:
 
     draw_txt(screen, f"The total momentum of the system is {str(round_total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
 
-    draw_txt(screen, f"The number of collisions is {str(hit_count)}.", 20, RED, (WIDTH/2), (HEIGHT-60))
+    draw_txt(screen, f"The number of collisions = {str(hit_count)}.", 20, RED, (WIDTH/2), (HEIGHT-60))
 
 
     

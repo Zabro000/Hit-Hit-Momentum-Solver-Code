@@ -101,7 +101,7 @@ def bubble_sort(item_list):
 class Block(pygame.sprite.Sprite):
    
     #Block Initialize
-    def __init__(self, side, blk_size, mass, v, name = None ):
+    def __init__(self, side, blk_size, mass, v, name = None):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((blk_size,blk_size))
         self.rect = self.image.get_rect()
@@ -115,14 +115,16 @@ class Block(pygame.sprite.Sprite):
         self.kinetic_energy = 0 
         self.body_color = BLUE
 
+       
         if side=="left":
-            self.image.fill(RED)
             self.float_position_x = 50
+        elif side == "c_left":
+            self.float_position_x = 250
         elif side=="right":
-            self.image.fill(BLUE)
             self.float_position_x = WIDTH - self.size - 50
+        elif side == "c_right":
+            self.float_position_x = WIDTH - self.size - 250
         elif side == "middle":
-            self.image.fill(GREEN)
             self.float_position_x = (WIDTH - self.size)/2
         else:
             print("DIRECTION ERROR")
@@ -222,6 +224,7 @@ show_ttl_screen()
 # Defining the states for the different buttons
 random_selection = False
 rear_end_selection = False 
+defualt_selection = False
 
 #Settings so the user can choose if they want a random collision or 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +260,7 @@ while running:
 
             if Default_B.rect.left <= mouse_location[0] <= Default_B.rect.left + Default_B.button_width and Default_B.rect.top <= mouse_location[1] <= Default_B.rect.bottom:
                 print("A button was pressed")
-                
+                defualt_selection = True
                 running = False
 
             if Rear_End_B.rect.left <= mouse_location[0] <= Rear_End_B.rect.left + Default_B.button_width and Rear_End_B.rect.top <= mouse_location[1] <= Rear_End_B.rect.bottom:
@@ -279,10 +282,11 @@ while running:
 #sprites used
 
 
+
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 600, 5,"left block")  
 RIGHT = Block("right",100,100, -1)
-MIDDLE = Block("middle", 200,20, 0.1, "middle block")
+MIDDLE = Block("middle",200,20, 0.1, "middle block")
 
 all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
@@ -299,18 +303,33 @@ if random_selection == True:
         objects.speedx  = new_velocity
         objects.mass = new_mass
 
-if rear_end_selection == True:
+elif rear_end_selection == True:
      LEFT.mass = 40
      LEFT.speedx = 3
      MIDDLE.mass = 20
      MIDDLE.speedx = 1
      RIGHT.mass = 10
      RIGHT.speedx = 0
+
+elif defualt_selection == True:
+     penny_mass = 0.00235
+     LEFT.side = "c_left"
+     RIGHT.side = "c_right"
+     for objects in all_sprites:
+         objects.mass = penny_mass
+         objects.body_color = COPPER
+         objects.speedx = 0
+    
+     LEFT.speedx = 1.5
+else: 
+      
+      raise "E"
+
      
 
 
-     """     penny_mass = 0.00235 
-    for objects in all_sprites:
+      """     penny_mass = 0.00235 
+      for objects in all_sprites:
         objects.mass = penny_mass
         objects.speedx = 0
         objects.body_color = COPPER 
@@ -457,6 +476,8 @@ while running:
     draw_txt(screen, f"The total kinetic energy of the system is {str(round_total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
 
     draw_txt(screen, f"The total momentum of the system is {str(round_total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
+
+    draw_txt(screen, f"The number of collisions is {str(hit_count)}.", 20, RED, (WIDTH/2), (HEIGHT-60))
 
 
     

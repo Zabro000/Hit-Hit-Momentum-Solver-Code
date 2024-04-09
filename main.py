@@ -158,10 +158,10 @@ class Block(pygame.sprite.Sprite):
         # sign of the speed direction is important for the code to determine which way the block will bounce away on a collision
         if self.speedx > 0:
             self.speedx_sign = 1
-        elif self.speedx_sign < 0:
+        elif self.speedx < 0:
             self.speedx_sign = -1
         else:
-            self.speedx_sign = None
+            self.speedx_sign = 2
 
         
 class Button(pygame.sprite.Sprite):

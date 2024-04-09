@@ -17,7 +17,7 @@ small = 100
 
 sig_digs = 4 # what to round the new random mass and velocity to so the screen is not too messy
 
-penny_img = "penny.jpeg"
+penny_img = "Reinhardt penny.jpeg"
 
 #variables for colours used
 WHITE = (255, 255, 255)

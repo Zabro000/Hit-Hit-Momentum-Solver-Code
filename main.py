@@ -189,6 +189,7 @@ def show_ttl_screen():
     #text for the title screen
     draw_txt(screen, "Penny Lab Simulation!!!", 40, BLACK, WIDTH / 2, 10)
     draw_txt(screen, "Press any key to continue.", 25, RED, WIDTH / 2, 50)
+    draw_txt(screen,"This simulates the collisions between three objects, or pennies placed beside each other, like the picture below. One of the colliding objects will always have its final velocity set to 0m/s to reflect the penny collision in real life.", 15, BLACK, WIDTH/2, 80)
     
     
     # Loads in the image of the simulation 
@@ -294,9 +295,6 @@ while running:
 
 
 #sprites used
-
-
-
 all_sprites = pygame.sprite.Group()
 LEFT = Block("left",200, 600, 5,"left block")  
 RIGHT = Block("right",100,100, -1)
@@ -306,9 +304,6 @@ all_sprites.add(LEFT)
 all_sprites.add(RIGHT)
 all_sprites.add(MIDDLE)
 
-
-# assigns random mass and velocity to all objects
-sig_digs = 4 # what to round the new random mass and velocity to so the screen is not too messy
 
 if random_selection == True:
     for objects in all_sprites:
@@ -362,18 +357,6 @@ while running:
         #close window
         if event.type == pygame.QUIT:
             running = False
-            
-        """  keystate = pygame.key.get_pressed() """
-        """  if keystate[pygame.K_SPACE]:
-            print("LEFT right edge: ", LEFT.rect.right)
-            print("LEFT speedx: ", LEFT.speedx)
-            print("RIGHT left edge: ", RIGHT.rect.left)
-            print("RIGHT speedx: ", RIGHT.speedx)
-            print("MIDDLE EDGE: ", MIDDLE.rect.right)
-            print("Middle speedx: ", MIDDLE.speedx)
-
-          """
-    #First colision of the left and middle block
    
     first_hit = pygame.sprite.collide_rect(LEFT, MIDDLE)
 
@@ -464,33 +447,24 @@ while running:
     screen.fill(WHITE)
     all_sprites.draw(screen)
     
-    draw_txt(screen, f"Block 1 speed {str(round(LEFT.speedx, sig_digs))} and mass {str(round(LEFT.mass,sig_digs))}", 18, LEFT.text_color, (200), 20)
+    draw_txt(screen, f"Block 1 speed: {str(round(LEFT.speedx, sig_digs))}m/s and mass: {str(round(LEFT.mass,sig_digs))}kg", 18, LEFT.text_color, (200), 20)
 
-    draw_txt(screen, f"Block 1 kinetic energy {str(round(LEFT.kinetic_energy, sig_digs))}", 18, LEFT.text_color, (200), 40)
+    draw_txt(screen, f"Block 1 kinetic energy: {str(round(LEFT.kinetic_energy, sig_digs))}J", 18, LEFT.text_color, (200), 40)
 
-    draw_txt(screen, f"Block 2 speed {str(round(MIDDLE.speedx, sig_digs))} and mass {str(round(MIDDLE.mass, sig_digs))}", 18, MIDDLE.text_color, (WIDTH/2), 20)
+    draw_txt(screen, f"Block 2 speed: {str(round(MIDDLE.speedx, sig_digs))}m/s and mass: {str(round(MIDDLE.mass, sig_digs))}kg", 18, MIDDLE.text_color, (WIDTH/2), 20)
 
-    draw_txt(screen, f"Block 2 kinetic energy {str(round(MIDDLE.kinetic_energy, sig_digs))}", 18, MIDDLE.text_color, (WIDTH/2), 40)
+    draw_txt(screen, f"Block 2 kinetic energy: {str(round(MIDDLE.kinetic_energy, sig_digs))}J", 18, MIDDLE.text_color, (WIDTH/2), 40)
 
-    draw_txt(screen, f"Block 3 speed {str(round(RIGHT.speedx, sig_digs))}  and mass {str(round(MIDDLE.mass, sig_digs))}", 18, RIGHT.text_color, (WIDTH-200), 20)
+    draw_txt(screen, f"Block 3 speed: {str(round(RIGHT.speedx, sig_digs))}m/s and mass {str(round(MIDDLE.mass, sig_digs))}kg", 18, RIGHT.text_color, (WIDTH-200), 20)
 
-    draw_txt(screen, f"Block 3 kinetic energy {str(round(RIGHT.kinetic_energy, sig_digs))}", 18, RIGHT.text_color, (WIDTH-200), 40)
+    draw_txt(screen, f"Block 3 kinetic energy: {str(round(RIGHT.kinetic_energy, sig_digs))}J", 18, RIGHT.text_color, (WIDTH-200), 40)
 
     
-    draw_txt(screen, f"The total kinetic energy of the system is {str(round_total_kinetic_energy)}.", 20, RED, (WIDTH/2), (HEIGHT-20))
+    draw_txt(screen, f"The total kinetic energy of the system is {str(round_total_kinetic_energy)}J.", 20, RED, (WIDTH/2), (HEIGHT-20))
 
-    draw_txt(screen, f"The total momentum of the system is {str(round_total_momentum)}.", 20, RED, (WIDTH/2), (HEIGHT-40))
+    draw_txt(screen, f"The total momentum of the system is {str(round_total_momentum)}Ns.", 20, RED, (WIDTH/2), (HEIGHT-40))
 
     draw_txt(screen, f"The number of collisions = {str(hit_count)}.", 20, RED, (WIDTH/2), (HEIGHT-60))
-
-
-    
- 
-
-    """ draw_txt(screen, str(hit_count), 28, BLACK, (WIDTH/2), 10)
-    draw_txt(screen, str(wall_hits), 18, BLACK, (WIDTH/2), 26)
-    draw_txt(screen, str(LEFT.vel), 18, RED, (WIDTH/4), 26)
-    draw_txt(screen, str(RIGHT.vel), 18, BLUE, 3*(WIDTH/4), 26) """
 
     #flips display after drawing everything
     pygame.display.flip()

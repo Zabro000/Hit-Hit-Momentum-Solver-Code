@@ -156,10 +156,12 @@ class Block(pygame.sprite.Sprite):
     
 
         # sign of the speed direction is important for the code to determine which way the block will bounce away on a collision
-        if self.speedx >= 0:
+        if self.speedx > 0:
             self.speedx_sign = 1
-        else:
+        elif self.speedx_sign < 0:
             self.speedx_sign = -1
+        else:
+            self.speedx_sign = None
 
         
 class Button(pygame.sprite.Sprite):
@@ -207,19 +209,19 @@ def show_ttl_screen():
 
             
 all_buttons = pygame.sprite.Group()
-Random_B = Button("Random Values", GREEN, WIDTH/2 - 150, HEIGHT/2 - 30)
-Default_B = Button("Defualt Values", BLUE, WIDTH/2 + 150, HEIGHT/2 - 30)
-Head_on_B = Button("Head On Values", RED, WIDTH/2, HEIGHT/2 + 100)
+Random_B = Button("Random Collision", GREEN, WIDTH/2 - 150, HEIGHT/2 - 30)
+Default_B = Button("Defualt Collision", BLUE, WIDTH/2 + 150, HEIGHT/2 - 30)
+Rear_End_B = Button("Rear End Collision", RED, WIDTH/2, HEIGHT/2 + 100)
 
 all_buttons.add(Random_B)
 all_buttons.add(Default_B)
-all_buttons.add(Head_on_B)
+all_buttons.add(Rear_End_B)
 
 show_ttl_screen()
 
 # Defining the states for the different buttons
 random_selection = False
-head_on_selection = False 
+rear_end_selection = False 
 
 #Settings so the user can choose if they want a random collision or 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,11 +257,12 @@ while running:
 
             if Default_B.rect.left <= mouse_location[0] <= Default_B.rect.left + Default_B.button_width and Default_B.rect.top <= mouse_location[1] <= Default_B.rect.bottom:
                 print("A button was pressed")
+                
                 running = False
 
-            if Head_on_B.rect.left <= mouse_location[0] <= Head_on_B.rect.left + Default_B.button_width and Head_on_B.rect.top <= mouse_location[1] <= Head_on_B.rect.bottom:
+            if Rear_End_B.rect.left <= mouse_location[0] <= Rear_End_B.rect.left + Default_B.button_width and Rear_End_B.rect.top <= mouse_location[1] <= Rear_End_B.rect.bottom:
                 print("A button was pressed")
-                head_on_selection = True
+                rear_end_selection = True
                 running = False
 
         all_buttons.update()
@@ -268,7 +271,7 @@ while running:
         # shows the display text of the button
         draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position, Random_B.y_position - 10)
         draw_txt(screen, str(Default_B.display_text), 20, BLACK, Default_B.x_position, Default_B.y_position - 10)
-        draw_txt(screen, str(Head_on_B.display_text), 20, WHITE, Head_on_B.x_position, Head_on_B.y_position -10)
+        draw_txt(screen, str(Rear_End_B.display_text), 20, WHITE, Rear_End_B.x_position, Rear_End_B.y_position -10)
         pygame.display.flip()
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -296,12 +299,22 @@ if random_selection == True:
         objects.speedx  = new_velocity
         objects.mass = new_mass
 
-if head_on_selection == True:
-    penny_mass = 0.00235 
+if rear_end_selection == True:
+     LEFT.mass = 40
+     LEFT.speedx = 3
+     MIDDLE.mass = 20
+     MIDDLE.speedx = 1
+     RIGHT.mass = 10
+     RIGHT.speedx = 0
+     
+
+
+     """     penny_mass = 0.00235 
     for objects in all_sprites:
         objects.mass = penny_mass
         objects.speedx = 0
         objects.body_color = COPPER 
+        objects.blk_size = 75 """
 
 
 

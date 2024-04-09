@@ -25,6 +25,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+COPPER = (72, 45, 20)
 
 #initialise pygame and create a window
 pygame.init()
@@ -112,6 +113,7 @@ class Block(pygame.sprite.Sprite):
         self.float_position_x = 0
         self.text_color = BLACK
         self.kinetic_energy = 0 
+        self.body_color = BLUE
 
         if side=="left":
             self.image.fill(RED)
@@ -205,16 +207,19 @@ def show_ttl_screen():
 
             
 all_buttons = pygame.sprite.Group()
-Random_B = Button("Random Values", GREEN, WIDTH/2 - 200, HEIGHT/2)
-Default_B = Button("Defualt Values", BLUE, WIDTH/2 + 200, HEIGHT/2)
+Random_B = Button("Random Values", GREEN, WIDTH/2 - 150, HEIGHT/2 - 30)
+Default_B = Button("Defualt Values", BLUE, WIDTH/2 + 150, HEIGHT/2 - 30)
+Head_on_B = Button("Head On Values", RED, WIDTH/2, HEIGHT/2 + 100)
 
 all_buttons.add(Random_B)
 all_buttons.add(Default_B)
+all_buttons.add(Head_on_B)
 
 show_ttl_screen()
 
-# Important varrible
+# Defining the states for the different buttons
 random_selection = False
+head_on_selection = False 
 
 #Settings so the user can choose if they want a random collision or 
 #/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -252,12 +257,18 @@ while running:
                 print("A button was pressed")
                 running = False
 
+            if Head_on_B.rect.left <= mouse_location[0] <= Head_on_B.rect.left + Default_B.button_width and Head_on_B.rect.top <= mouse_location[1] <= Head_on_B.rect.bottom:
+                print("A button was pressed")
+                head_on_selection = True
+                running = False
+
         all_buttons.update()
         all_buttons.draw(screen)
 
         # shows the display text of the button
         draw_txt(screen,str(Random_B.display_text), 20, BLACK, Random_B.x_position, Random_B.y_position - 10)
-        draw_txt(screen, Default_B.display_text, 20, BLACK, Default_B.x_position, Default_B.y_position - 10)
+        draw_txt(screen, str(Default_B.display_text), 20, BLACK, Default_B.x_position, Default_B.y_position - 10)
+        draw_txt(screen, str(Head_on_B.display_text), 20, WHITE, Head_on_B.x_position, Head_on_B.y_position -10)
         pygame.display.flip()
 #////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -284,6 +295,13 @@ if random_selection == True:
         new_mass = round(random.uniform(0.1, 500), sig_digs)
         objects.speedx  = new_velocity
         objects.mass = new_mass
+
+if head_on_selection == True:
+    penny_mass = 0.00235 
+    for objects in all_sprites:
+        objects.mass = penny_mass
+        objects.speedx = 0
+        objects.body_color = COPPER 
 
 
 
@@ -398,7 +416,7 @@ while running:
             sprite.image.fill(RED)
         else:
             sprite.text_color = BLACK
-            sprite.image.fill(BLUE)
+            sprite.image.fill(sprite.body_color)
     
     total_kinetic_energy = LEFT.kinetic_energy + MIDDLE.kinetic_energy + RIGHT.kinetic_energy
     total_momentum = LEFT.momentum + MIDDLE.momentum + RIGHT.momentum

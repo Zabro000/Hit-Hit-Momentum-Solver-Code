@@ -5,6 +5,7 @@
 import pygame
 import time
 import random
+import math
 
 
 #Screen size and frames per second
@@ -46,6 +47,16 @@ def draw_txt(surf, text, size, color, x, y):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
+
+def momentum_math_simple(mass, velocity):
+    return mass * velocity
+
+
+#simple kinetic energy math function for 1D objects
+def kinetic_energy_math_simple(net_velocity, mass):
+    return (1/2) * mass * (net_velocity**2)
+
+
 # Does the math for collisions
 def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, other_mass):
     #starting math
@@ -71,13 +82,59 @@ def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, oth
 
     return collider_velocity_final, other_velocity_final, momentum_inital
 
-def momentum_math_simple(mass, velocity):
-    return mass * velocity
+# Does the math for collisions
+def velocity_finder_simple_3(collider_velocity, collider_mass, other_velocity, other_mass):
+    
+    if collider_mass <= other_mass:
+        print("passsss")
+        collider_velocity_final = 0
+    elif collider_mass > other_mass:
+        collider_velocity_final = -0.9 * collider_velocity
 
 
-#simple kinetic energy math function for 1D objects
-def kinetic_energy_math_simple(net_velocity, mass):
-    return (1/2) * mass * (net_velocity**2)
+
+    #starting math
+    collider_momentum_inital = collider_velocity * collider_mass
+    other_momentum_inital = other_velocity * other_mass
+    momentum_inital = other_momentum_inital + collider_momentum_inital
+    
+    #what the collider final velocity should be (this is important for the physics but can be different or random)
+    print("collider_velocity_final, ", collider_velocity_final)
+
+    #equation for the velocity final of the other object
+    other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+
+    print("other_velocity_final", other_velocity_final)
+    print("collider_velocity_final, ", collider_velocity_final)
+
+    #momentum final
+    momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
+
+    if momentum_final == momentum_inital:
+        print("Momentum is conserved!, ", momentum_final, momentum_inital)
+
+    return collider_velocity_final, other_velocity_final, momentum_inital
+
+
+def velocity_finder_simple_2(collider_velocity, collider_mass, other_velocity, other_mass):
+    collider_velocity_final = 0 
+    collider_inital_kinetic = kinetic_energy_math_simple(collider_velocity, collider_mass)
+
+    other_inital_kinetic = kinetic_energy_math_simple(other_velocity, other_mass)
+
+    total_inital_kinetic_energy = other_inital_kinetic + collider_inital_kinetic
+
+    other_velocity_final = ((0.5 *total_inital_kinetic_energy)/other_mass)**0.5
+
+    collider_momentum_inital = collider_velocity * collider_mass
+    other_momentum_inital = other_velocity * other_mass
+    momentum_inital = other_momentum_inital + collider_momentum_inital
+
+    return collider_velocity_final, other_velocity_final, momentum_inital
+
+
+    
+
 
 
 #uses amount of momentum to sort
@@ -325,9 +382,9 @@ if random_selection == True:
 elif rear_end_selection == True:
      LEFT.mass = 40
      LEFT.speedx = 3
-     MIDDLE.mass = 20
+     MIDDLE.mass = 21
      MIDDLE.speedx = 2
-     RIGHT.mass = 10
+     RIGHT.mass = 22
      RIGHT.speedx = 0.1
 
 elif defualt_selection == True:
@@ -352,10 +409,11 @@ hit_count = 0
 game_start = True
 running = True
 
+
+
 #Main Game Loop
 #////////////////////////////////////////////////////////////////
 while running:
-
     #keep loop running at correct speed
     clock.tick(FPS)
     #Process input (events)
@@ -389,7 +447,7 @@ while running:
 
         #Moves blocks away from each other so they dont get stuck
 
-        collider.speedx, projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+        collider.speedx, projectile.speedx, momentum = velocity_finder_simple_3(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
@@ -421,7 +479,7 @@ while running:
             print("velocity of fastest", first_hit_objs[-1].name)
             print("should stop:", first_hit_objs[-1].name)
 
-        collider.speedx , projectile.speedx, momentum = velocity_finder_simple(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
+        collider.speedx , projectile.speedx, momentum = velocity_finder_simple_3(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
@@ -431,7 +489,7 @@ while running:
 
         
         hit_count+=1
-
+    
      
     #Changing the color of the text based if a sprite is moving or not
     for sprite in all_sprites:
@@ -461,7 +519,7 @@ while running:
 
     draw_txt(screen, f"Block 2 kinetic energy: {str(round(MIDDLE.kinetic_energy, sig_digs))}J", 18, MIDDLE.text_color, (WIDTH/2), 40)
 
-    draw_txt(screen, f"Block 3 speed: {str(round(RIGHT.speedx, sig_digs))}m/s and mass {str(round(MIDDLE.mass, sig_digs))}kg", 18, RIGHT.text_color, (WIDTH-200), 20)
+    draw_txt(screen, f"Block 3 speed: {str(round(RIGHT.speedx, sig_digs))}m/s and mass {str(round(RIGHT.mass, sig_digs))}kg", 18, RIGHT.text_color, (WIDTH-200), 20)
 
     draw_txt(screen, f"Block 3 kinetic energy: {str(round(RIGHT.kinetic_energy, sig_digs))}J", 18, RIGHT.text_color, (WIDTH-200), 40)
 

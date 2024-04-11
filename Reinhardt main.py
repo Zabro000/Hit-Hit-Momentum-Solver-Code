@@ -84,34 +84,62 @@ def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, oth
 
 # Does the math for collisions
 def velocity_finder_simple_3(collider_velocity, collider_mass, other_velocity, other_mass):
+    #Initalizing all the varibles needed in the math loop
+    collider_inital_kinetic = kinetic_energy_math_simple(collider_velocity, collider_mass)
+    other_inital_kinetic = kinetic_energy_math_simple(other_velocity, other_mass)
+    total_inital_kinetic = other_inital_kinetic + collider_inital_kinetic
+
+    print("inital kinetic energy of the two objects")
     
-    if collider_mass <= other_mass:
-        print("passsss")
-        collider_velocity_final = 0
-    elif collider_mass > other_mass:
-        collider_velocity_final = -0.9 * collider_velocity
+    collider_final_kinetic = 0
+    other_final_kinetic = 0 
+    total_final_kinetic = 0 
+
+    collider_final_kinetic = collider_final_kinetic + other_final_kinetic
+
+    inital_collider_momentum = collider.momentum 
+    collider_velocity_final = 0
+    other_velocity_final = 0
+
+    # collision cannot generate energy and must cause more collisions:
+    while total_inital_kinetic > total_final_kinetic and other_velocity_final < collider_velocity_final: 
+
+        #This is what I saw when doing the penny lab, that the colliding object would transfer all of its mommentum
+        if collider_mass <= other_mass:
+            collider_velocity_final = collider_velocity * round(random.uniform(0.0, 0.3), 4)
+            print("less than")
+        # Larger objects tend to keep lots of their momentum in collisons with smaller objects
+        else:
+            collider_velocity_final = collider_velocity * round(random.uniform(0.4, 0.7), 4)
 
 
 
-    #starting math
-    collider_momentum_inital = collider_velocity * collider_mass
-    other_momentum_inital = other_velocity * other_mass
-    momentum_inital = other_momentum_inital + collider_momentum_inital
+        #starting math
+        collider_momentum_inital = collider_velocity * collider_mass
+        other_momentum_inital = other_velocity * other_mass
+        momentum_inital = other_momentum_inital + collider_momentum_inital
+
+
+        #equation for the velocity final of the other object
+        other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+
     
-    #what the collider final velocity should be (this is important for the physics but can be different or random)
-    print("collider_velocity_final, ", collider_velocity_final)
+    
+        #what the collider final velocity should be (this is important for the physics but can be different or random)
+        print("collider_velocity_final, ", collider_velocity_final)
 
-    #equation for the velocity final of the other object
-    other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+        print("other_velocity_final", other_velocity_final)
+        print("collider_velocity_final, ", collider_velocity_final)
 
-    print("other_velocity_final", other_velocity_final)
-    print("collider_velocity_final, ", collider_velocity_final)
+        momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
 
-    #momentum final
-    momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
+        if momentum_final == momentum_inital:
+            print("Momentum is conserved!, ", momentum_final, momentum_inital)
 
-    if momentum_final == momentum_inital:
-        print("Momentum is conserved!, ", momentum_final, momentum_inital)
+
+        total_final_kinetic = kinetic_energy_math_simple(collider_velocity_final, collider_mass) + kinetic_energy_math_simple(other_velocity_final, other_mass)
+
+        print("MATH IS DONE")
 
     return collider_velocity_final, other_velocity_final, momentum_inital
 

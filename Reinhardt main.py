@@ -57,30 +57,6 @@ def kinetic_energy_math_simple(net_velocity, mass):
     return (1/2) * mass * (net_velocity**2)
 
 
-# Does the math for collisions
-def velocity_finder_simple(collider_velocity, collider_mass, other_velocity, other_mass):
-    #starting math
-    collider_momentum_inital = collider_velocity * collider_mass
-    other_momentum_inital = other_velocity * other_mass
-    momentum_inital = other_momentum_inital + collider_momentum_inital
-    
-    #what the collider final velocity should be (this is important for the physics but can be different or random)
-    collider_velocity_final = 0
-    print("collider_velocity_final, ", collider_velocity_final)
-
-    #equation for the velocity final of the other object
-    other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
-
-    print("other_velocity_final", other_velocity_final)
-    print("collider_velocity_final, ", collider_velocity_final)
-
-    #momentum final
-    momentum_final = other_velocity_final*other_mass + collider_velocity_final*collider_mass
-
-    if momentum_final == momentum_inital:
-        print("Momentum is conserved!, ", momentum_final, momentum_inital)
-
-    return collider_velocity_final, other_velocity_final, momentum_inital
 
 # Does the math for collisions
 def velocity_finder_simple_3(collider_velocity, collider_mass, other_velocity, other_mass):
@@ -89,39 +65,45 @@ def velocity_finder_simple_3(collider_velocity, collider_mass, other_velocity, o
     other_inital_kinetic = kinetic_energy_math_simple(other_velocity, other_mass)
     total_inital_kinetic = other_inital_kinetic + collider_inital_kinetic
 
-    print("inital kinetic energy of the two objects")
-    
-    collider_final_kinetic = 0
-    other_final_kinetic = 0 
-    total_final_kinetic = 0 
+    collider_momentum_inital = collider_velocity * collider_mass
+    other_momentum_inital = other_velocity * other_mass
+    momentum_inital = other_momentum_inital + collider_momentum_inital
 
-    collider_final_kinetic = collider_final_kinetic + other_final_kinetic
+
+    print("inital kinetic energy of the two objects")
+
+    print("collider mass", collider.mass)
+
+
+    total_final_kinetic = 0
 
     inital_collider_momentum = collider.momentum 
     collider_velocity_final = 0
     other_velocity_final = 0
 
+    print("got to here")
+    calculating = True 
+
     # collision cannot generate energy and must cause more collisions:
-    while total_inital_kinetic > total_final_kinetic and other_velocity_final < collider_velocity_final: 
+    while calculating: 
+        print("collider mass;", collider_mass)
 
         #This is what I saw when doing the penny lab, that the colliding object would transfer all of its mommentum
         if collider_mass <= other_mass:
-            collider_velocity_final = collider_velocity * round(random.uniform(0.0, 0.3), 4)
-            print("less than")
+            collider_velocity_final = collider_velocity * round(random.uniform(0, 0.2), 4)
+            print("less than") 
         # Larger objects tend to keep lots of their momentum in collisons with smaller objects
         else:
-            collider_velocity_final = collider_velocity * round(random.uniform(0.4, 0.7), 4)
+            collider_velocity_final = collider_velocity * round(random.uniform(0.1, 0.9), 4)
 
 
 
-        #starting math
-        collider_momentum_inital = collider_velocity * collider_mass
-        other_momentum_inital = other_velocity * other_mass
-        momentum_inital = other_momentum_inital + collider_momentum_inital
-
+        print("got to herEEEEE")
 
         #equation for the velocity final of the other object
         other_velocity_final = (collider_mass*(collider_velocity - collider_velocity_final) + other_momentum_inital)/other_mass
+
+        total_final_kinetic = kinetic_energy_math_simple(collider_velocity_final, collider_mass) + kinetic_energy_math_simple(other_velocity_final, other_mass)
 
     
     
@@ -136,33 +118,18 @@ def velocity_finder_simple_3(collider_velocity, collider_mass, other_velocity, o
         if momentum_final == momentum_inital:
             print("Momentum is conserved!, ", momentum_final, momentum_inital)
 
+        print("momentum_final", momentum_final)
 
-        total_final_kinetic = kinetic_energy_math_simple(collider_velocity_final, collider_mass) + kinetic_energy_math_simple(other_velocity_final, other_mass)
+        if total_inital_kinetic > total_final_kinetic and other_velocity_final > collider_velocity_final and momentum_final == momentum_inital:
+            calculating = False
 
-        print("MATH IS DONE")
+        print("repeat")
 
-    return collider_velocity_final, other_velocity_final, momentum_inital
-
-
-def velocity_finder_simple_2(collider_velocity, collider_mass, other_velocity, other_mass):
-    collider_velocity_final = 0 
-    collider_inital_kinetic = kinetic_energy_math_simple(collider_velocity, collider_mass)
-
-    other_inital_kinetic = kinetic_energy_math_simple(other_velocity, other_mass)
-
-    total_inital_kinetic_energy = other_inital_kinetic + collider_inital_kinetic
-
-    other_velocity_final = ((0.5 *total_inital_kinetic_energy)/other_mass)**0.5
-
-    collider_momentum_inital = collider_velocity * collider_mass
-    other_momentum_inital = other_velocity * other_mass
-    momentum_inital = other_momentum_inital + collider_momentum_inital
+        
+    print("MATH IS DONE")
+    print('\n')
 
     return collider_velocity_final, other_velocity_final, momentum_inital
-
-
-    
-
 
 
 #uses amount of momentum to sort
@@ -408,11 +375,11 @@ if random_selection == True:
     RIGHT.speedx = round(random.uniform(-3.5, 3.6), sig_digs)
 
 elif rear_end_selection == True:
-     LEFT.mass = 40
+     LEFT.mass = 10
      LEFT.speedx = 3
-     MIDDLE.mass = 21
+     MIDDLE.mass = 40
      MIDDLE.speedx = 2
-     RIGHT.mass = 22
+     RIGHT.mass = 10
      RIGHT.speedx = 0.1
 
 elif defualt_selection == True:
@@ -473,17 +440,20 @@ while running:
             print("should stop:", first_hit_objs[-1].name)
 
 
+            
+        collider_space_sign = -1 * collider.speedx_sign
+        projectile_space_sign = -1 * projectile.speedx_sign
+
+        collider.float_position_x +=50 * collider_space_sign
+        projectile.float_position_x += 0 * projectile_space_sign
+
+        hit_count+=1
+
+
         #Moves blocks away from each other so they dont get stuck
 
         collider.speedx, projectile.speedx, momentum = velocity_finder_simple_3(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
-        collider_space_sign = -1 * collider.speedx_sign
-        projectile_space_sign = -1 * projectile.speedx_sign
-
-        collider.float_position_x += 30 * collider_space_sign
-        projectile.float_position_x += 10 * projectile_space_sign
-
-        hit_count+=1
 
     
     #Code for collisions between the RIGHT and MIDDLE block 
@@ -507,13 +477,14 @@ while running:
             print("velocity of fastest", first_hit_objs[-1].name)
             print("should stop:", first_hit_objs[-1].name)
 
-        collider.speedx , projectile.speedx, momentum = velocity_finder_simple_3(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
-
         collider_space_sign = -1 * collider.speedx_sign
         projectile_space_sign = -1 * projectile.speedx_sign
 
-        collider.float_position_x += 30 * collider_space_sign
-        projectile.float_position_x += 10 * projectile_space_sign
+        collider.float_position_x += 50 * collider_space_sign
+        projectile.float_position_x += 0 * projectile_space_sign
+
+
+        collider.speedx , projectile.speedx, momentum = velocity_finder_simple_3(collider.speedx, collider.mass, projectile.speedx, projectile.mass)
 
         
         hit_count+=1
